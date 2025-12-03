@@ -23,13 +23,6 @@ ALLOWED_HOSTS = [
     '[::1]',
 ]
 
-# Allow frontend (Vite)
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-    'http://[::1]:5173',
-]
-
 # ----------- INSTALLED APPS -----------
 INSTALLED_APPS = [
     # Django default
@@ -40,10 +33,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # REST
+    # REST & CORS
     'rest_framework',
     'rest_framework.authtoken',
-    'corsheaders',
+    'corsheaders',  # To musi być zainstalowane (pip install django-cors-headers)
 
     # Your apps
     'users',
@@ -57,7 +50,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
 
-    # CORS
+    # CORS (Musi być jak najwyżej, przed CommonMiddleware)
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 
@@ -67,8 +60,21 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# Allow all cross-origin frontend requests
-CORS_ALLOW_ALL_ORIGINS = True
+# ----------- CORS CONFIGURATION (NAPRAWIONE) -----------
+# To pozwala na wysyłanie tokenów/ciasteczek
+CORS_ALLOW_CREDENTIALS = True
+
+# To określa, kto konkretnie może się łączyć (Vite)
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
+# Opcjonalnie: Zaufane źródła dla CSRF (zabezpieczenie formularzy)
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+]
 
 ROOT_URLCONF = 'config.urls'
 
