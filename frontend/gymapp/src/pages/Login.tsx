@@ -13,7 +13,7 @@ const Login = () => {
     try {
       await login(username, password);
     } catch {
-      setError("Nieprawidłowy login lub hasło");
+      setError("Wrong login or password");
     }
   };
 
