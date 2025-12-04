@@ -13,8 +13,8 @@ const Exercises = () => {
   return (
     <div className="container">
       <div style={{ margin: "40px 0", borderBottom: "1px solid #333", paddingBottom: "20px" }}>
-        <h1>Baza Ćwiczeń</h1>
-        <p style={{ color: "var(--text-secondary)" }}>Przeglądaj dostępne ćwiczenia i techniki.</p>
+        <h1>Exercise Database</h1>
+        <p style={{ color: "var(--text-secondary)" }}>Browse available exercises and techniques.</p>
       </div>
 
       <div className="grid-layout">

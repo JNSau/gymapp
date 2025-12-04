@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"; // <--- 1. Importujemy Link
 import "../index.css";
 
 type Props = {
@@ -6,42 +7,58 @@ type Props = {
     name: string;
     muscle_group: string;
     difficulty: string;
-    image?: string;
+    image_url?: string; // <--- 2. Zmienione na image_url (tak jak w Django)
+    image?: string; // Zostawiam jako fallback
   };
 };
 
 const ExerciseCard = ({ exercise }: Props) => {
+  // Sprawdzamy, czy backend wysłał image_url czy image
+  const imgSrc = exercise.image_url || exercise.image;
+
   return (
-    <div className="card">
-      {/* Sekcja obrazka - jeśli brak, pokazujemy gradient */}
+    <div className="card" style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+      {/* Sekcja obrazka */}
       <div 
         style={{ 
-          height: "150px", 
+          height: "180px", // Trochę wyższe dla lepszego wyglądu
           overflow: "hidden", 
-          background: exercise.image ? "transparent" : "linear-gradient(135deg, #333, #111)",
+          background: imgSrc ? "transparent" : "linear-gradient(135deg, #333, #111)",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center"
+          justifyContent: "center",
+          borderBottom: "1px solid #333"
         }}
       >
-        {exercise.image ? (
+        {imgSrc ? (
           <img
-            src={exercise.image}
+            src={imgSrc}
             alt={exercise.name}
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
         ) : (
-          <span style={{color: "#555", fontSize: "2rem"}}>🏋️</span>
+          <span style={{color: "#555", fontSize: "3rem"}}>🏋️</span>
         )}
       </div>
 
-      <div style={{ padding: "20px" }}>
-        <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
+      <div style={{ padding: "20px", flex: 1, display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", gap: "10px", marginBottom: "15px" }}>
           <span className="badge badge-muscle">{exercise.muscle_group}</span>
           <span className="badge badge-diff">{exercise.difficulty}</span>
         </div>
         
-        <h3 style={{ margin: "0 0 10px 0", fontSize: "1.2rem" }}>{exercise.name}</h3>
+        <h3 style={{ margin: "0 0 10px 0", fontSize: "1.2rem", flex: 1 }}>
+          {exercise.name}
+        </h3>
+
+        {/* 3. Przycisk na samym dole */}
+        <div style={{ marginTop: "15px" }}>
+          <Link to={`/exercises/${exercise.id}`}>
+            <button className="btn-primary" style={{ width: "100%" }}>
+              See Details
+            </button>
+          </Link>
+        </div>
       </div>
     </div>
   );
