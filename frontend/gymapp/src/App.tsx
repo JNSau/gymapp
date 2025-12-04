@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import Exercises from "./pages/Exercises";
 import Plans from "./pages/Plans";
 import PlanDetails from "./pages/PlanDetails";
+import Home from "./pages/Home";
 import { AuthProvider } from "./context/AuthContext"; // <--- Musisz to zaimportować
 import "./App.css";
 
@@ -15,7 +16,8 @@ function App() {
       <AuthProvider>
         <Navbar />
         <Routes>
-          <Route path="/" element={<Exercises />} />
+          <Route path="/" element={<Home />} /> {/* <-- TERAZ Home to Home */}
+          <Route path="/exercises" element={<Exercises />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/exercises" element={<Exercises />} />
