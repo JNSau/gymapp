@@ -137,3 +137,11 @@ STATIC_URL = 'static/'
 
 # ----------- DEFAULT PK -----------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# ----------- MEDIA FILES (DODAJ TO) -----------
+# To jest URL publiczny (np. http://localhost:8000/media/obrazek.jpg)
+MEDIA_URL = '/media/'
+
+# To jest ścieżka fizyczna na dysku (folder media w głównym katalogu)
+MEDIA_ROOT = BASE_DIR / 'media'

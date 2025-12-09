@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Exercise(models.Model):
     class MuscleGroup(models.TextChoices):
         CHEST = "CHEST", "Chest"
@@ -19,7 +20,13 @@ class Exercise(models.Model):
     description = models.TextField()
     muscle_group = models.CharField(max_length=20, choices=MuscleGroup.choices)
     difficulty = models.CharField(max_length=20, choices=Difficulty.choices)
-    image = models.URLField(blank=True, null=True)
+
+    # --- ZMIANA TUTAJ ---
+    # Zmieniono URLField na ImageField.
+    # upload_to='exercises/' oznacza, że zdjęcia trafią do folderu media/exercises/
+    image = models.ImageField(upload_to='exercises/', blank=True, null=True)
+    # --------------------
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
