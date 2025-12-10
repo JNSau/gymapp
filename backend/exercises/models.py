@@ -7,7 +7,13 @@ class Exercise(models.Model):
         BACK = "BACK", "Back"
         SHOULDERS = "SHOULDERS", "Shoulders"
         LEGS = "LEGS", "Legs"
-        ARMS = "ARMS", "Arms"
+
+        # --- ROZBICIE ARMS NA 3 PARTIE ---
+        BICEPS = "BICEPS", "Biceps"
+        TRICEPS = "TRICEPS", "Triceps"
+        FOREARMS = "FOREARMS", "Forearms"
+        # ---------------------------------
+
         CORE = "CORE", "Core"
         FULLBODY = "FULLBODY", "Full Body"
 
@@ -21,11 +27,8 @@ class Exercise(models.Model):
     muscle_group = models.CharField(max_length=20, choices=MuscleGroup.choices)
     difficulty = models.CharField(max_length=20, choices=Difficulty.choices)
 
-    # --- ZMIANA TUTAJ ---
-    # Zmieniono URLField na ImageField.
-    # upload_to='exercises/' oznacza, że zdjęcia trafią do folderu media/exercises/
+    # Obsługa zdjęć
     image = models.ImageField(upload_to='exercises/', blank=True, null=True)
-    # --------------------
 
     created_at = models.DateTimeField(auto_now_add=True)
 
