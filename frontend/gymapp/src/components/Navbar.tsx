@@ -1,33 +1,51 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import "./Navbar.css";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
 
   return (
-    <nav style={{ padding: "15px", background: "#222", color: "white" }}>
-      <ul style={{ display: "flex", gap: "20px", listStyle: "none" }}>
-        <li><Link to="/" style={{ color: "white" }}>Home</Link></li>
-        <li><Link to="/exercises" style={{ color: "white" }}>Exercises</Link></li>
-        <li><Link to="/plans" style={{ color: "white" }}>Plans</Link></li>
+    <header className="navbar">
+      <div className="navbar-container">
+        {/* Logo - Zmienione na GYMERSIVE */}
+        <Link to="/" className="navbar-logo">
+          GYM<span className="text-accent">ERSIVE</span>
+        </Link>
 
-        {user ? (
-          <>
-            <li>Hello, {user.username}</li>
-            <li>
-              <button onClick={logout} style={{ background: "red", color: "white", border: "none", padding: "5px 10px" }}>
-                Logout
-              </button>
-            </li>
-          </>
-        ) : (
-          <>
-            <li><Link to="/login" style={{ color: "white" }}>Login</Link></li>
-            <li><Link to="/register" style={{ color: "white" }}>Register</Link></li>
-          </>
-        )}
-      </ul>
-    </nav>
+        {/* Menu */}
+        <nav className="navbar-links">
+          <Link to="/exercises">Exercises</Link>
+          <Link to="/plans">Plans</Link>
+          
+          {user ? (
+            <div className="user-section">
+              {/* --- ZMIANA TUTAJ: Link do Profilu --- */}
+              <Link 
+                to="/profile" 
+                className="username" 
+                style={{ 
+                  textDecoration: "none", 
+                  cursor: "pointer", 
+                  marginRight: "15px",
+                  fontWeight: "bold"
+                }}
+              >
+                {user.username}
+              </Link>
+
+              <button onClick={logout} className="btn-danger small">Logout</button>
+            </div>
+          ) : (
+            /* Sekcja dla niezalogowanych */
+            <div className="auth-links" style={{ display: "flex", gap: "15px", alignItems: "center" }}>
+              <Link to="/login" className="btn-primary">Login</Link>
+              <Link to="/register">Register</Link>
+            </div>
+          )}
+        </nav>
+      </div>
+    </header>
   );
 };
 

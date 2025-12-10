@@ -4,11 +4,11 @@ const Home = () => {
   const { user } = useAuth();
   return (
     <div className="container" style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>Witaj w Gymersive! 💪</h1>
+      <h1>Welcome to GymPlanner! 💪</h1>
       {user ? (
-        <p>Widzimy się znowu <strong>{user.username}</strong>. Gotowy na trening?</p>
+        <p>Good to see you again, <strong>{user.username}</strong>. Ready for your workout?</p>
       ) : (
-        <p>Zaloguj się, aby zacząć układać plan.</p>
+        <p>Log in to start building your training plan.</p>
       )}
     </div>
   );

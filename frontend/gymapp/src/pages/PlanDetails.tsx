@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getPlanDetails } from "../api/plans";
-import DayCard from "../components/Daycard"; // Uważaj na wielkość liter w imporcie! (DayCard vs Daycard)
+import DayCard from "../components/Daycard";
 import Feedback from "./Feedback";
 import "../index.css";
 
@@ -19,7 +19,7 @@ const PlanDetails = () => {
 
   return (
     <div className="container">
-      {/* Nagłówek Planu */}
+      {/* Plan Header */}
       <div style={{ background: "var(--bg-secondary)", padding: "40px", borderRadius: "12px", marginTop: "20px" }}>
         <span className="badge badge-level" style={{marginBottom: "15px"}}>{plan.level}</span>
         <h1>{plan.name}</h1>
@@ -28,15 +28,15 @@ const PlanDetails = () => {
         </p>
       </div>
 
-      {/* Lista Dni */}
+      {/* Schedule */}
       <div style={{ margin: "40px 0" }}>
-        <h2 style={{ marginBottom: "20px" }}>Harmonogram</h2>
+        <h2 style={{ marginBottom: "20px" }}>Schedule</h2>
         {plan.days.map((day: any) => (
           <DayCard key={day.id} day={day} />
         ))}
       </div>
 
-      {/* Sekcja Oceny (Feedback) */}
+      {/* Feedback Section */}
       <div style={{ borderTop: "1px solid #333", paddingTop: "40px", paddingBottom: "60px" }}>
         <Feedback planId={plan.id} />
       </div>
