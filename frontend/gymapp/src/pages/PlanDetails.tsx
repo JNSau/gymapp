@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getPlanDetails } from "../api/plans";
-import DayCard from "../components/Daycard";
+import DayCard from "../components/Daycard"; // <--- 3. Poprawiona wielkość litery 'C'
 import Feedback from "./Feedback";
 import "../index.css";
 

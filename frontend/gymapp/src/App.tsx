@@ -7,7 +7,8 @@ import ExerciseDetails from "./pages/ExerciseDetails";
 import Plans from "./pages/Plans";
 import PlanDetails from "./pages/PlanDetails";
 import Home from "./pages/Home";
-import Profile from "./pages/Profile"; // <--- 1. Import Profilu
+import Profile from "./pages/Profile";
+import ActiveWorkout from "./pages/ActiveWorkout"; // <--- 1. IMPORT
 import { AuthProvider } from "./context/AuthContext";
 import "./App.css";
 
@@ -19,19 +20,21 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           
-          {/* Ćwiczenia */}
+          {/* Exercises */}
           <Route path="/exercises" element={<Exercises />} />
           <Route path="/exercises/:id" element={<ExerciseDetails />} />
           
-          {/* Plany */}
+          {/* Plans */}
           <Route path="/plans" element={<Plans />} />
           <Route path="/plans/:id" element={<PlanDetails />} />
           
-          {/* Użytkownik */}
+          {/* Active Workout (Trening na żywo) */}
+          {/* --- 2. NOWA TRASA --- */}
+          <Route path="/workout/:planId/:dayId" element={<ActiveWorkout />} />
+          
+          {/* User Auth */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          
-          {/* --- 2. DODANA TRASA PROFILU --- */}
           <Route path="/profile" element={<Profile />} />
         </Routes>
       </AuthProvider>
