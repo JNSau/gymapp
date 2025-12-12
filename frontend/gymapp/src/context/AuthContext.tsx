@@ -1,5 +1,5 @@
-// src/context/AuthContext.tsx
 import { createContext, useContext, useState, useEffect } from "react";
+// --- POPRAWKA: Dodajemy 'import type' ---
 import type { ReactNode } from "react";
 import { loginUser, registerUser, getCurrentUser } from "../api/users";
 
@@ -13,6 +13,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   token: string | null;
+  loading: boolean;
   login: (username: string, password: string) => Promise<void>;
   register: (username: string, password: string, email: string) => Promise<void>;
   logout: () => void;
@@ -24,16 +25,16 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
+  const [loading, setLoading] = useState<boolean>(true);
 
   // Funkcja logowania
   const login = async (username: string, password: string) => {
     try {
       const data = await loginUser({ username, password });
-      const accessToken = data.access; // zakładamy, że backend zwraca { access: string, user: {...} }
+      const accessToken = data.access; 
       setToken(accessToken);
       localStorage.setItem("token", accessToken);
-
-      await fetchUser();
+      await fetchUser(); 
     } catch (error) {
       console.error("Login failed", error);
       throw error;
@@ -59,7 +60,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // Funkcja pobrania danych aktualnego użytkownika
   const fetchUser = async () => {
-    if (!token) return;
+    const currentToken = localStorage.getItem("token");
+    if (!currentToken) return;
+
     try {
       const currentUser = await getCurrentUser();
       setUser(currentUser);
@@ -69,21 +72,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Automatyczne pobranie usera przy starcie jeśli token istnieje
+  // Automatyczne sprawdzanie sesji
   useEffect(() => {
-    if (token) {
-      fetchUser();
-    }
-  }, [token]);
+    const initAuth = async () => {
+      const storedToken = localStorage.getItem("token");
+      if (storedToken) {
+        setToken(storedToken);
+        await fetchUser();
+      }
+      setLoading(false);
+    };
+    initAuth();
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user, token, login, register, logout, fetchUser }}>
+    <AuthContext.Provider value={{ user, token, loading, login, register, logout, fetchUser }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Hook dla wygodnego użycia kontekstu
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {
