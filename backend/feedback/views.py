@@ -1,18 +1,28 @@
-from django.shortcuts import render
-
-# Create your views here.
-from rest_framework.views import APIView
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from rest_framework import status
+from django.db import IntegrityError
 from .models import Feedback
 from .serializers import FeedbackSerializer
-from plans.models import TrainingPlan
 
-class FeedbackView(APIView):
-    def post(self, request, plan_id):
-        plan = TrainingPlan.objects.get(id=plan_id)
-        serializer = FeedbackSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=request.user, plan=plan)
-            return Response({"message": "Feedback saved"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class FeedbackView(generics.CreateAPIView):
+    queryset = Feedback.objects.all()
+    serializer_class = FeedbackSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except IntegrityError:
+            # --- ZMIEŃ TEKST TUTAJ ---
+            return Response(
+                {"error": "You have already rated this plan."}, # <--- Było po polsku, wpisz po angielsku
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

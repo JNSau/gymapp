@@ -17,6 +17,7 @@ class Feedback(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        # To zapobiega dodaniu dwóch opinii do tego samego planu przez jedną osobę
         unique_together = ("user", "plan")
 
     def __str__(self):
