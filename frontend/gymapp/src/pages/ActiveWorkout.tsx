@@ -1,24 +1,23 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getPlanDetails } from "../api/plans";
-import { saveWorkout } from "../api/history"; // <--- 1. IMPORTUJEMY FUNKCJĘ ZAPISU
+import { saveWorkout } from "../api/history";
 import "../index.css";
 
 const ActiveWorkout = () => {
   const { planId, dayId } = useParams();
   const navigate = useNavigate();
   
-  // Stan stopera
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState(true);
-
-  // Dane treningowe
   const [dayData, setDayData] = useState<any>(null);
-  
-  // Stan wprowadzonych wyników
   const [logs, setLogs] = useState<any>({});
 
-  // 1. Stoper
+  // --- NOWE STANY DLA MODALA ---
+  const [showModal, setShowModal] = useState(false); // Czy pokazać okienko?
+  const [workoutName, setWorkoutName] = useState(""); // Przechowywanie nazwy
+
+  // Stoper
   useEffect(() => {
     let interval: any = null;
     if (isActive) {
@@ -31,25 +30,31 @@ const ActiveWorkout = () => {
     return () => clearInterval(interval);
   }, [isActive, seconds]);
 
-  // 2. Pobieranie danych
+  // Pobieranie danych
   useEffect(() => {
     if(planId) {
         getPlanDetails(Number(planId)).then(plan => {
             const day = plan.days.find((d: any) => d.id === Number(dayId));
             setDayData(day);
+            // Ustawiamy domyślną nazwę od razu
+            setWorkoutName(`Workout - Day ${day.day_number}`);
         });
     }
   }, [planId, dayId]);
 
-  // Obsługa wpisywania danych
   const handleInputChange = (exerciseId: number, setIndex: number, field: string, value: any) => {
+    let cleanValue = value;
+    if ((field === "weight" || field === "reps") && Number(value) < 0) {
+        cleanValue = 0;
+    }
+
     setLogs((prevLogs: any) => ({
       ...prevLogs,
       [exerciseId]: {
         ...prevLogs[exerciseId],
         [setIndex]: {
           ...prevLogs[exerciseId]?.[setIndex],
-          [field]: value
+          [field]: cleanValue
         }
       }
     }));
@@ -61,57 +66,55 @@ const ActiveWorkout = () => {
     return `${mins}:${remainingSecs < 10 ? '0' : ''}${remainingSecs}`;
   };
 
-  // --- 3. GŁÓWNA ZMIANA: ZAPISYWANIE DO BAZY ---
-  const handleFinish = async () => {
-    // Zatrzymujemy czas
-    setIsActive(false);
-    
-    const confirm = window.confirm("Finish workout and save?");
-    
-    if (confirm) {
-        try {
-            // FORMATOWANIE DANYCH:
-            // Musimy zamienić nasz obiekt 'logs' na płaską listę, którą przyjmie Django
-            const formattedLogs: any[] = [];
-            
-            Object.keys(logs).forEach(exerciseId => {
-                const sets = logs[exerciseId];
-                Object.keys(sets).forEach(setIndex => {
-                    const set = sets[setIndex];
-                    // Zapisujemy tylko serie zaznaczone jako "done"
-                    if (set.done) { 
-                        formattedLogs.push({
-                            exercise: Number(exerciseId),
-                            set_number: Number(setIndex) + 1,
-                            reps_done: Number(set.reps || 0),
-                            weight_kg: Number(set.weight || 0)
-                        });
-                    }
-                });
+  // 1. Kliknięcie przycisku "FINISH" -> Otwiera okienko
+  const onFinishClick = () => {
+    setIsActive(false); // Zatrzymujemy czas
+    setShowModal(true); // Pokazujemy nasze okno
+  };
+
+  // 2. Kliknięcie "Anuluj" w okienku
+  const closeModal = () => {
+    setShowModal(false);
+    setIsActive(true); // Wznawiamy czas
+  };
+
+  // 3. Kliknięcie "Zapisz" w okienku -> Faktyczna wysyłka
+  const confirmSave = async () => {
+    try {
+        const formattedLogs: any[] = [];
+        
+        Object.keys(logs).forEach(exerciseId => {
+            const sets = logs[exerciseId];
+            Object.keys(sets).forEach(setIndex => {
+                const set = sets[setIndex];
+                if (set.done) { 
+                    formattedLogs.push({
+                        exercise: Number(exerciseId),
+                        set_number: Number(setIndex) + 1,
+                        reps_done: Number(set.reps || 0),
+                        weight_kg: Number(set.weight || 0)
+                    });
+                }
             });
+        });
 
-            // Przygotowanie paczki danych (Payload)
-            const payload = {
-                duration_minutes: Math.ceil(seconds / 60), // Czas w minutach
-                training_day: Number(dayId), // ID dnia (żeby wiedzieć jaki to był plan)
-                logs: formattedLogs, // Lista wykonanych serii
-            };
+        const payload = {
+            custom_name: workoutName, // Bierzemy nazwę z naszego inputa
+            duration_minutes: Math.ceil(seconds / 60),
+            training_day: Number(dayId),
+            logs: formattedLogs,
+        };
 
-            console.log("Sending to API:", payload);
+        await saveWorkout(payload);
+        
+        // Zamykamy modal i przekierowujemy
+        setShowModal(false);
+        navigate("/profile");
 
-            // WYSYŁKA
-            await saveWorkout(payload);
-            
-            alert("Workout saved successfully! Great job! 💪");
-            navigate("/profile"); // Przekierowanie do profilu
-
-        } catch (error) {
-            console.error(error);
-            alert("Failed to save workout. Check console for details.");
-            setIsActive(true); // Wznawiamy stoper w razie błędu
-        }
-    } else {
-        setIsActive(true); // Anulowano, czas leci dalej
+    } catch (error) {
+        console.error(error);
+        alert("Failed to save workout.");
+        setIsActive(true);
     }
   };
 
@@ -146,16 +149,13 @@ const ActiveWorkout = () => {
                 {Array.from({ length: ex.sets }).map((_, index) => (
                     <div key={index} style={{ display: "flex", gap: "10px", marginTop: "10px", alignItems: "center" }}>
                         <span style={{ width: "20px", fontWeight: "bold", color: "#555" }}>{index + 1}</span>
-                        
                         <input 
-                            type="number" 
-                            placeholder="kg" 
+                            type="number" min="0" placeholder="kg" 
                             style={{ width: "80px", padding: "8px" }}
                             onChange={(e) => handleInputChange(ex.id, index, "weight", e.target.value)}
                         />
                         <input 
-                            type="number" 
-                            placeholder="reps" 
+                            type="number" min="0" placeholder="reps" 
                             defaultValue={ex.reps.split("-")[0]}
                             style={{ width: "80px", padding: "8px" }}
                             onChange={(e) => handleInputChange(ex.id, index, "reps", e.target.value)}
@@ -171,20 +171,65 @@ const ActiveWorkout = () => {
         ))}
       </div>
 
-      {/* Przycisk Zakończ */}
+      {/* Przycisk Główny (Otwiera Modal) */}
       <div style={{ 
         position: "fixed", bottom: 0, left: 0, right: 0, 
         background: "#121212", padding: "20px", borderTop: "1px solid #333",
         display: "flex", justifyContent: "center"
       }}>
         <button 
-            onClick={handleFinish} 
+            onClick={onFinishClick} 
             className="btn-primary" 
             style={{ width: "100%", maxWidth: "400px", padding: "15px", fontSize: "1.2rem" }}
         >
             FINISH WORKOUT 🏁
         </button>
       </div>
+
+      {/* --- NASZ CUSTOMOWY MODAL --- */}
+      {showModal && (
+        <div style={{
+            position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
+            background: "rgba(0,0,0,0.85)", // Ciemne tło
+            zIndex: 1000,
+            display: "flex", justifyContent: "center", alignItems: "center",
+            padding: "20px"
+        }}>
+            <div className="card" style={{ width: "100%", maxWidth: "400px", padding: "30px", border: "1px solid #444" }}>
+                <h2 style={{ marginTop: 0, textAlign: "center" }}>Great Job! 🎉</h2>
+                <p style={{ textAlign: "center", color: "var(--text-secondary)" }}>
+                    You exercised for {formatTime(seconds)}. <br/> Name your workout to save it.
+                </p>
+
+                <div style={{ margin: "20px 0" }}>
+                    <label style={{ display: "block", marginBottom: "10px" }}>Workout Name</label>
+                    <input 
+                        type="text" 
+                        value={workoutName}
+                        onChange={(e) => setWorkoutName(e.target.value)}
+                        style={{ width: "100%", padding: "12px", fontSize: "1.1rem" }}
+                        autoFocus
+                    />
+                </div>
+
+                <div style={{ display: "flex", gap: "10px" }}>
+                    <button 
+                        onClick={closeModal}
+                        style={{ flex: 1, padding: "12px", background: "transparent", border: "1px solid #555", color: "white", borderRadius: "8px", cursor: "pointer" }}
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        onClick={confirmSave}
+                        className="btn-primary"
+                        style={{ flex: 1, padding: "12px" }}
+                    >
+                        Save Workout
+                    </button>
+                </div>
+            </div>
+        </div>
+      )}
 
     </div>
   );

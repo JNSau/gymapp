@@ -1,22 +1,20 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import api from "../api/axios";
-import { getWorkoutHistory } from "../api/history"; // <--- 1. Import funkcji historii
+import { getWorkoutHistory } from "../api/history";
 import "../index.css";
 
 const Profile = () => {
   const { user, logout } = useAuth();
   const [joinDate, setJoinDate] = useState("");
-  const [history, setHistory] = useState<any[]>([]); // <--- 2. Stan na historię treningów
+  const [history, setHistory] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Pobieramy dane usera
         const userRes = await api.get("users/me/");
         setJoinDate(userRes.data.date_joined);
 
-        // Pobieramy historię treningów
         const historyRes = await getWorkoutHistory();
         setHistory(historyRes);
       } catch (error) {
@@ -76,7 +74,7 @@ const Profile = () => {
             </p>
           </div>
 
-          {/* Stat 2: Ukończone treningi (TERAZ DZIAŁA!) */}
+          {/* Stat 2: Ukończone treningi */}
           <div className="card" style={{ padding: "20px", textAlign: "center" }}>
             <span style={{ fontSize: "2rem" }}>🔥</span>
             <h3 style={{ margin: "10px 0 5px" }}>Workouts Done</h3>
@@ -95,7 +93,7 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* --- NOWA SEKCJA: HISTORIA TRENINGÓW --- */}
+        {/* --- HISTORIA TRENINGÓW --- */}
         <h2 style={{ marginBottom: "20px", borderTop: "1px solid #333", paddingTop: "40px" }}>Recent Activity</h2>
         
         {history.length === 0 ? (
@@ -108,8 +106,9 @@ const Profile = () => {
                 {history.map((session: any) => (
                     <div key={session.id} className="card" style={{ padding: "20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <div>
+                            {/* --- ZMIANA TUTAJ: Wyświetlamy custom_name --- */}
                             <h4 style={{ margin: "0 0 5px 0", fontSize: "1.1rem", color: "var(--accent)" }}>
-                                {session.plan_name || "Free Workout"}
+                                {session.custom_name || session.plan_name || "Workout"}
                             </h4>
                             <span style={{ fontSize: "0.9rem", color: "#888" }}>
                                 {new Date(session.start_time).toLocaleDateString()} • {session.duration_minutes} min
@@ -126,7 +125,6 @@ const Profile = () => {
             </div>
         )}
 
-        {/* Przycisk Wylogowania */}
         <button 
           onClick={logout} 
           className="btn-danger" 
