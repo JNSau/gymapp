@@ -50,24 +50,26 @@ class ExerciseInPlan(models.Model):
         return f"{self.exercise.name} – {self.sets}x{self.reps}"
 
 
-# --- NOWE MODELE: HISTORIA TRENINGÓW (Active Workout) ---
+# --- HISTORIA TRENINGÓW (Active Workout) ---
 
 class WorkoutSession(models.Model):
     """
     Reprezentuje jeden odbyty trening.
     """
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    # Jeśli usuniemy plan, historia zostaje (dlatego SET_NULL)
     training_day = models.ForeignKey(TrainingDay, on_delete=models.SET_NULL, null=True, blank=True)
+
+    # --- NOWE POLE: NAZWA TRENINGU ---
+    custom_name = models.CharField(max_length=100, blank=True, default="My Workout")
 
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(null=True, blank=True)
-    duration_minutes = models.IntegerField(default=0)  # Czas trwania w minutach
-    notes = models.TextField(blank=True)  # Notatki użytkownika po treningu
+    duration_minutes = models.IntegerField(default=0)
+    notes = models.TextField(blank=True)
 
     def __str__(self):
-        date_str = self.start_time.strftime('%Y-%m-%d')
-        return f"{self.user.username} - {date_str}"
+        # Wyświetlamy teraz nazwę własną w panelu admina
+        return f"{self.user.username} - {self.custom_name}"
 
 
 class WorkoutLog(models.Model):

@@ -3,15 +3,11 @@ from .models import TrainingPlan, TrainingDay, ExerciseInPlan, WorkoutSession, W
 from exercises.serializers import ExerciseSerializer
 
 
-# --- SERIALIZERY PLANÓW (BEZ ZMIAN) ---
+# --- SERIALIZERY PLANÓW ---
 
 class ExerciseInPlanSerializer(serializers.ModelSerializer):
-    # Flattening: Wyciągamy dane ćwiczenia wyżej, żeby frontend miał łatwiej
     exercise_name = serializers.CharField(source='exercise.name', read_only=True)
     exercise_image = serializers.URLField(source='exercise.image_url', read_only=True)
-
-    # Możesz zostawić pełny obiekt jeśli potrzebujesz, ale powyższe pola są wygodniejsze
-    # exercise = ExerciseSerializer(read_only=True)
 
     class Meta:
         model = ExerciseInPlan
@@ -34,7 +30,7 @@ class TrainingPlanSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-# --- NOWE SERIALIZERY: HISTORIA TRENINGÓW ---
+# --- SERIALIZERY HISTORII ---
 
 class WorkoutLogSerializer(serializers.ModelSerializer):
     exercise_name = serializers.CharField(source='exercise.name', read_only=True)
@@ -45,14 +41,14 @@ class WorkoutLogSerializer(serializers.ModelSerializer):
 
 
 class WorkoutSessionSerializer(serializers.ModelSerializer):
-    logs = WorkoutLogSerializer(many=True)  # Zagnieżdżamy logi w treningu
+    logs = WorkoutLogSerializer(many=True)
     plan_name = serializers.CharField(source='training_day.plan.name', read_only=True, default="Custom Workout")
 
     class Meta:
         model = WorkoutSession
-        fields = ['id', 'start_time', 'end_time', 'duration_minutes', 'logs', 'plan_name']
+        # --- ZMIANA: DODAŁEM 'custom_name' DO LISTY PÓL ---
+        fields = ['id', 'start_time', 'end_time', 'duration_minutes', 'logs', 'plan_name', 'custom_name']
 
-    # Magiczna metoda: Zapisuje Trening ORAZ Logi w jednej transakcji
     def create(self, validated_data):
         logs_data = validated_data.pop('logs')
         session = WorkoutSession.objects.create(**validated_data)
