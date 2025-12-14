@@ -5,7 +5,7 @@ import "../index.css";
 const Home = () => {
   const { user } = useAuth();
 
-  // Wspólny styl dla przycisków (możesz go wynieść do zmiennej, żeby nie powtarzać kodu)
+  // --- STYLE DLA PRZYCISKÓW (Hero + Survey) ---
   const buttonStyle: React.CSSProperties = {
     display: "inline-block",
     background: "var(--accent)", 
@@ -17,10 +17,34 @@ const Home = () => {
     textDecoration: "none",
     boxShadow: "0 0 20px rgba(212, 255, 0, 0.4)", 
     transition: "transform 0.2s ease",
-    cursor: "pointer"
+    cursor: "pointer",
+    border: "none"
   };
 
-  // Funkcje animacji z poprawionymi typami TypeScript
+  // --- STYLE DLA KONTENERA ANKIETY (Nowy, lepszy wygląd) ---
+  const surveyContainerStyle: React.CSSProperties = {
+    // Delikatny gradient w kolorze akcentu (bardzo przezroczysty)
+    background: "linear-gradient(135deg, rgba(212, 255, 0, 0.08) 0%, #121212 100%)",
+    // Pełne obramowanie w kolorze akcentu
+    border: "1px solid var(--accent)",
+    // Świecąca poświata wokół całego pudełka
+    boxShadow: "0 0 30px rgba(212, 255, 0, 0.15)",
+    
+    padding: "50px", // Większy padding
+    borderRadius: "20px",
+    maxWidth: "900px",
+    margin: "0 auto",
+    marginBottom: "80px",
+    textAlign: "left",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+    gap: "30px",
+    position: "relative",
+    overflow: "hidden"
+  };
+
   const handleMouseOver = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.currentTarget.style.transform = "scale(1.05)";
   };
@@ -50,7 +74,6 @@ const Home = () => {
         <div style={{ marginTop: "40px", display: "flex", gap: "20px", justifyContent: "center" }}>
           
           {user ? (
-            // --- ZALOGOWANY: Przycisk do planów (Teraz wygląda super!) ---
             <Link 
               to="/plans" 
               style={buttonStyle}
@@ -60,7 +83,6 @@ const Home = () => {
               Browse Plans 📋
             </Link>
           ) : (
-            // --- NIEZALOGOWANY: Przycisk CTA ---
             <Link 
               to="/login" 
               style={buttonStyle}
@@ -74,36 +96,47 @@ const Home = () => {
         </div>
       </div>
 
-      {/* --- ANKIETA (Tylko dla zalogowanych) --- */}
+      {/* --- ANKIETA (Tylko dla zalogowanych - BARDZIEJ ZAAKCENTOWANA) --- */}
       {user && (
-        <div className="hover-effect" style={{
-          background: "linear-gradient(135deg, #1a1a1a 0%, #252525 100%)",
-          padding: "40px",
-          borderRadius: "15px",
-          border: "1px solid #333",
-          borderLeft: "6px solid var(--accent)",
-          maxWidth: "800px",
-          margin: "0 auto",
-          marginBottom: "80px",
-          textAlign: "left",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          gap: "20px"
-        }}>
-          <div style={{ flex: 1 }}>
-            <h2 style={{ margin: "0 0 10px 0", fontSize: "1.8rem" }}>
+        <div className="hover-effect" style={surveyContainerStyle}>
+          
+          {/* Ozdobne tło (opcjonalnie) - wielki znak zapytania w tle */}
+          <div style={{
+            position: "absolute",
+            right: "-20px",
+            top: "-20px",
+            fontSize: "15rem",
+            color: "var(--accent)",
+            opacity: "0.05",
+            pointerEvents: "none",
+            fontWeight: "bold"
+          }}>?</div>
+
+          <div style={{ flex: 1, zIndex: 1 }}>
+            {/* Tytuł w kolorze akcentu */}
+            <h2 style={{ margin: "0 0 15px 0", fontSize: "2.2rem", color: "var(--accent)" }}>
               Not sure where to start? 🤔
             </h2>
-            <p style={{ color: "var(--text-secondary)", margin: 0, fontSize: "1rem" }}>
-              Take our quick assessment quiz to calculate your strength level.
+            <p style={{ color: "#ddd", margin: 0, fontSize: "1.1rem", lineHeight: "1.6" }}>
+              Don't guess. <strong>Calculate.</strong> <br/>
+              Take our advanced strength assessment quiz (Wilks Score) to check your level of advancement.
             </p>
           </div>
 
-          <Link to="/survey" className="btn-primary" style={{ whiteSpace: "nowrap" }}>
-            Check My Level ⚡
-          </Link>
+          <div style={{ zIndex: 1 }}>
+            <Link 
+                to="/survey" 
+                style={{
+                    ...buttonStyle,
+                    padding: "15px 35px", // Troszkę mniejszy padding niż w Hero, ale wciąż duży
+                    fontSize: "1.1rem"
+                }}
+                onMouseOver={handleMouseOver}
+                onMouseOut={handleMouseOut}
+            >
+                Check My Level ⚡
+            </Link>
+          </div>
         </div>
       )}
 
