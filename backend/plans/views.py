@@ -5,22 +5,18 @@ from .serializers import TrainingPlanSerializer, WorkoutSessionSerializer
 # --- WIDOKI PLANÓW ---
 
 class TrainingPlanList(generics.ListAPIView):
+    # ZMIANA: Teraz zwracamy wszystkie plany, bez filtrowania po levelu
+    queryset = TrainingPlan.objects.all()
     serializer_class = TrainingPlanSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        # Jeśli użytkownik nie jest zalogowany lub nie ma poziomu, zwróć wszystko
-        if not user.is_authenticated or not hasattr(user, 'level') or not user.level:
-            return TrainingPlan.objects.all()
-        # Filtrowanie po poziomie użytkownika
-        return TrainingPlan.objects.filter(level=user.level)
+    permission_classes = [permissions.IsAuthenticated]
 
 class TrainingPlanDetail(generics.RetrieveAPIView):
     queryset = TrainingPlan.objects.all()
     serializer_class = TrainingPlanSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
-# --- NOWY WIDOK: HISTORIA TRENINGÓW ---
+# --- WIDOK: HISTORIA TRENINGÓW ---
 
 class WorkoutHistoryView(generics.ListCreateAPIView):
     serializer_class = WorkoutSessionSerializer
