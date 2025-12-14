@@ -3,42 +3,52 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import TrainingPlan, TrainingDay, ExerciseInPlan, WorkoutSession
-from .serializers import TrainingPlanSerializer, WorkoutSessionSerializer
+# Pamiętaj o imporcie nowego serializera:
+from .serializers import (
+    TrainingPlanSerializer,
+    WorkoutSessionSerializer,
+    ExerciseInPlanUpdateSerializer
+)
 
-# --- 1. KATALOG PUBLICZNY (Explore Plans) ---
+# --- 1. KATALOG PUBLICZNY ---
 class PublicPlanListView(generics.ListAPIView):
     serializer_class = TrainingPlanSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # Zwracamy tylko plany, które NIE mają właściciela (są systemowe)
         return TrainingPlan.objects.filter(user__isnull=True)
 
-# --- 2. MOJE PLANY (My Workouts) ---
+# --- 2. MOJE PLANY ---
 class UserPlanListView(generics.ListAPIView):
     serializer_class = TrainingPlanSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # Zwracamy plany przypisane do aktualnego użytkownika
         return TrainingPlan.objects.filter(user=self.request.user)
 
 # --- 3. SZCZEGÓŁY PLANU ---
 class TrainingPlanDetail(generics.RetrieveUpdateDestroyAPIView):
-    # RetrieveUpdateDestroy pozwala też edytować i usuwać plan (ważne dla "My Workouts")
     queryset = TrainingPlan.objects.all()
     serializer_class = TrainingPlanSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-# --- 4. LOGIKA KOPIOWANIA (Deep Copy) ---
+# --- 4. EDYCJA POJEDYNCZEGO ĆWICZENIA (NOWOŚĆ) ---
+class ExerciseInPlanUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ExerciseInPlan.objects.all()
+    serializer_class = ExerciseInPlanUpdateSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        # Zabezpieczenie: Pozwalamy edytować tylko ćwiczenia należące do planów zalogowanego usera
+        return ExerciseInPlan.objects.filter(training_day__plan__user=self.request.user)
+
+# --- 5. LOGIKA KOPIOWANIA ---
 class CopyPlanView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        # Pobieramy oryginał (np. plan systemowy)
         original_plan = get_object_or_404(TrainingPlan, pk=pk)
 
-        # A. Tworzymy kopię Planu dla Usera
         new_plan = TrainingPlan.objects.create(
             user=request.user,
             name=f"{original_plan.name} (My Copy)",
@@ -46,14 +56,12 @@ class CopyPlanView(APIView):
             level=original_plan.level
         )
 
-        # B. Kopiujemy Dni
         for original_day in original_plan.days.all():
             new_day = TrainingDay.objects.create(
                 plan=new_plan,
                 day_number=original_day.day_number
             )
 
-            # C. Kopiujemy Ćwiczenia wewnątrz dnia
             for original_ex_in_plan in original_day.exercises.all():
                 ExerciseInPlan.objects.create(
                     training_day=new_day,

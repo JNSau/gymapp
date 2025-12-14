@@ -1,17 +1,40 @@
 from rest_framework import serializers
 from .models import TrainingPlan, TrainingDay, ExerciseInPlan, WorkoutSession, WorkoutLog
 from exercises.serializers import ExerciseSerializer
+from exercises.models import Exercise  # <--- WAŻNE: Musimy zaimportować model Exercise do query setu
 
 
 # --- SERIALIZERY PLANÓW ---
 
 class ExerciseInPlanSerializer(serializers.ModelSerializer):
+    """
+    Służy do WYŚWIETLANIA planu (read-only).
+    """
     exercise_name = serializers.CharField(source='exercise.name', read_only=True)
     exercise_image = serializers.URLField(source='exercise.image_url', read_only=True)
 
     class Meta:
         model = ExerciseInPlan
         fields = ['id', 'exercise', 'exercise_name', 'exercise_image', 'sets', 'reps', 'rest_time']
+
+
+class ExerciseInPlanUpdateSerializer(serializers.ModelSerializer):
+    """
+    Służy do EDYCJI wiersza w planie.
+    Pozwala zmienić parametry ORAZ podmienić ćwiczenie (przez exercise_id).
+    """
+    exercise_name = serializers.CharField(source='exercise.name', read_only=True)
+
+    # To pole pozwala na zmianę ćwiczenia poprzez wysłanie jego ID
+    exercise_id = serializers.PrimaryKeyRelatedField(
+        queryset=Exercise.objects.all(),
+        source='exercise',  # Mapuje wysłane ID na pole modelu 'exercise'
+        write_only=True
+    )
+
+    class Meta:
+        model = ExerciseInPlan
+        fields = ['id', 'exercise_id', 'exercise_name', 'sets', 'reps', 'rest_time']
 
 
 class TrainingDaySerializer(serializers.ModelSerializer):
@@ -46,7 +69,6 @@ class WorkoutSessionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WorkoutSession
-        # --- ZMIANA: DODAŁEM 'custom_name' DO LISTY PÓL ---
         fields = ['id', 'start_time', 'end_time', 'duration_minutes', 'logs', 'plan_name', 'custom_name']
 
     def create(self, validated_data):
