@@ -13,9 +13,9 @@ const ActiveWorkout = () => {
   const [dayData, setDayData] = useState<any>(null);
   const [logs, setLogs] = useState<any>({});
 
-  // --- NOWE STANY DLA MODALA ---
-  const [showModal, setShowModal] = useState(false); // Czy pokazać okienko?
-  const [workoutName, setWorkoutName] = useState(""); // Przechowywanie nazwy
+  // --- STANY MODALA ---
+  const [showModal, setShowModal] = useState(false);
+  const [workoutName, setWorkoutName] = useState("");
 
   // Stoper
   useEffect(() => {
@@ -36,7 +36,6 @@ const ActiveWorkout = () => {
         getPlanDetails(Number(planId)).then(plan => {
             const day = plan.days.find((d: any) => d.id === Number(dayId));
             setDayData(day);
-            // Ustawiamy domyślną nazwę od razu
             setWorkoutName(`Workout - Day ${day.day_number}`);
         });
     }
@@ -66,23 +65,19 @@ const ActiveWorkout = () => {
     return `${mins}:${remainingSecs < 10 ? '0' : ''}${remainingSecs}`;
   };
 
-  // 1. Kliknięcie przycisku "FINISH" -> Otwiera okienko
   const onFinishClick = () => {
-    setIsActive(false); // Zatrzymujemy czas
-    setShowModal(true); // Pokazujemy nasze okno
+    setIsActive(false);
+    setShowModal(true);
   };
 
-  // 2. Kliknięcie "Anuluj" w okienku
   const closeModal = () => {
     setShowModal(false);
-    setIsActive(true); // Wznawiamy czas
+    setIsActive(true);
   };
 
-  // 3. Kliknięcie "Zapisz" w okienku -> Faktyczna wysyłka
   const confirmSave = async () => {
     try {
         const formattedLogs: any[] = [];
-        
         Object.keys(logs).forEach(exerciseId => {
             const sets = logs[exerciseId];
             Object.keys(sets).forEach(setIndex => {
@@ -99,15 +94,13 @@ const ActiveWorkout = () => {
         });
 
         const payload = {
-            custom_name: workoutName, // Bierzemy nazwę z naszego inputa
+            custom_name: workoutName,
             duration_minutes: Math.ceil(seconds / 60),
             training_day: Number(dayId),
             logs: formattedLogs,
         };
 
         await saveWorkout(payload);
-        
-        // Zamykamy modal i przekierowujemy
         setShowModal(false);
         navigate("/profile");
 
@@ -123,18 +116,49 @@ const ActiveWorkout = () => {
   return (
     <div className="container" style={{ paddingBottom: "80px" }}>
       
-      {/* Timer */}
+      {/* --- HEADER Z CZASEM I STATUS BAR --- */}
       <div style={{ 
         position: "sticky", top: "70px", zIndex: 10, 
         background: "#1a1a1a", padding: "15px", 
         borderBottom: "2px solid var(--accent)",
-        display: "flex", justifyContent: "space-between", alignItems: "center"
+        display: "flex", justifyContent: "space-between", alignItems: "center",
+        boxShadow: "0 4px 10px rgba(0,0,0,0.3)" // Lekki cień pod paskiem
       }}>
-        <div>
-            <h2 style={{ margin: 0, fontSize: "1.2rem" }}>Day {dayData.day_number}</h2>
-            <span style={{ color: "var(--text-secondary)", fontSize: "0.8rem" }}>In progress...</span>
+        
+        {/* LEWA STRONA: Tytuł i Status Badge */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+            <h2 style={{ margin: 0, fontSize: "1.3rem", lineHeight: "1.1" }}>
+                Day {dayData.day_number}
+            </h2>
+            
+            {/* STYLOWY BADGE STATUSU */}
+            <div style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "5px",
+                background: "rgba(212, 255, 0, 0.1)", // Bardzo delikatne tło w kolorze akcentu
+                color: "var(--accent)", // Kolor tekstu (ten sam co akcent)
+                padding: "4px 8px",
+                borderRadius: "12px", // Zaokrąglone rogi
+                fontSize: "0.75rem",
+                fontWeight: "bold",
+                width: "fit-content",
+                border: "1px solid rgba(212, 255, 0, 0.2)"
+            }}>
+                <span style={{ fontSize: "10px" }}>●</span> IN PROGRESS
+            </div>
         </div>
-        <div style={{ fontSize: "2rem", fontWeight: "bold", fontFamily: "monospace", color: "var(--accent)" }}>
+
+        {/* PRAWA STRONA: Duży Zegar */}
+        <div style={{ 
+            fontSize: "2.2rem", 
+            fontWeight: "bold", 
+            fontFamily: "monospace", 
+            color: "var(--accent)",
+            background: "#222",
+            padding: "5px 10px",
+            borderRadius: "8px"
+        }}>
             {formatTime(seconds)}
         </div>
       </div>
@@ -171,7 +195,7 @@ const ActiveWorkout = () => {
         ))}
       </div>
 
-      {/* Przycisk Główny (Otwiera Modal) */}
+      {/* Przycisk Główny */}
       <div style={{ 
         position: "fixed", bottom: 0, left: 0, right: 0, 
         background: "#121212", padding: "20px", borderTop: "1px solid #333",
@@ -186,11 +210,11 @@ const ActiveWorkout = () => {
         </button>
       </div>
 
-      {/* --- NASZ CUSTOMOWY MODAL --- */}
+      {/* Modal */}
       {showModal && (
         <div style={{
             position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
-            background: "rgba(0,0,0,0.85)", // Ciemne tło
+            background: "rgba(0,0,0,0.85)", 
             zIndex: 1000,
             display: "flex", justifyContent: "center", alignItems: "center",
             padding: "20px"
