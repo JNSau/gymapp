@@ -11,6 +11,7 @@ import Plans from "./pages/Plans";
 import PlanDetails from "./pages/PlanDetails";
 import Profile from "./pages/Profile";
 import ActiveWorkout from "./pages/ActiveWorkout";
+import Survey from "./pages/Survey"; // <--- 1. IMPORT ANKIETY
 
 // IMPORT BRAMKARZA I CONTEXTU
 import ProtectedRoute from "./components/ProtectedRoute"; 
@@ -30,8 +31,14 @@ function App() {
           <Route path="/register" element={<Register />} />
 
           {/* --- TRASY CHRONIONE (Tylko dla zalogowanych) --- */}
-          {/* Zauważ, że element jest owinięty w <ProtectedRoute>...</ProtectedRoute> */}
           
+          {/* 2. NOWA TRASA: ANKIETA */}
+          <Route path="/survey" element={
+            <ProtectedRoute>
+              <Survey />
+            </ProtectedRoute>
+          } />
+
           <Route path="/exercises" element={
             <ProtectedRoute>
               <Exercises />

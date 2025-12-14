@@ -1,10 +1,10 @@
-import  api  from "./axios";
+import api from "./axios";
 
 export const registerUser = async (data: {
   username: string;
   password: string;
- email?: string;   // jeśli email nie jest wymagany
-  level?: string;   // dodaj level jako opcjonaln
+  email: string;   // Usunąłem '?', bo backend wymaga emaila (required=True)
+  level?: string;  
 }) => {
   const response = await api.post("/users/register/", data);
   return response.data;
@@ -15,10 +15,18 @@ export const loginUser = async (data: {
   password: string;
 }) => {
   const response = await api.post("/users/login/", data);
-  return response.data; // zwraca token + user
+  return response.data; 
 };
 
 export const getCurrentUser = async () => {
   const response = await api.get("/users/me/");
+  return response.data;
+};
+
+// --- NOWA FUNKCJA DO ANKIETY ---
+// Służy do aktualizacji samego poziomu użytkownika
+export const updateUserLevel = async (level: string) => {
+  // Używamy PATCH, żeby zaktualizować tylko jedno pole, a nie cały obiekt
+  const response = await api.patch("/users/me/", { level });
   return response.data;
 };
