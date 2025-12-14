@@ -5,22 +5,24 @@ from rest_framework.validators import UniqueValidator
 # Pobieramy Twój niestandardowy model użytkownika
 User = get_user_model()
 
-# Serializer do wyświetlania danych użytkownika
+# Serializer do wyświetlania I EDYCJI danych użytkownika
 class UserSerializer(serializers.ModelSerializer):
     # Formatujemy datę (np. 2023-10-12), read_only bo nie chcemy jej edytować
     date_joined = serializers.DateTimeField(format="%Y-%m-%d", read_only=True)
 
     class Meta:
         model = User
-        # Dodajemy 'date_joined' do listy pól zwracanych do Frontendu
         fields = ["id", "username", "email", "level", "date_joined"]
+        # Zabezpieczamy pola, których user nie powinien zmieniać
+        # WAŻNE: 'level' NIE jest tutaj wpisany, więc można go edytować!
+        read_only_fields = ["id", "date_joined", "username", "email"]
 
 
 # Serializer do rejestracji
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
-    # --- ZMIANA: WYMUSZAMY EMAIL + UNIKALNOŚĆ ---
+    # Wymuszamy unikalny email
     email = serializers.EmailField(
         required=True,
         validators=[UniqueValidator(queryset=User.objects.all(), message="This email is already in use.")]
@@ -35,6 +37,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             username=validated_data['username'],
             email=validated_data['email'],
             password=validated_data['password'],
+            # Jeśli user nie poda levelu przy rejestracji, domyślnie BEGINNER
             level=validated_data.get('level', 'BEGINNER')
         )
         return user

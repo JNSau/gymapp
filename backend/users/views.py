@@ -1,25 +1,24 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework import generics, permissions
+from django.contrib.auth import get_user_model
 from .serializers import RegisterSerializer, UserSerializer
 
-# Widok Rejestracji
-class RegisterView(APIView):
-    permission_classes = [AllowAny] # Rejestracja jest dostępna dla każdego
+User = get_user_model()
 
-    def post(self, request):
-        serializer = RegisterSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "User created"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# --- REJESTRACJA ---
+# Używamy generics.CreateAPIView - to standard do tworzenia nowych obiektów
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = RegisterSerializer
 
-# Widok "O mnie" - to naprawi błąd 404
-class CurrentUserView(APIView):
-    permission_classes = [IsAuthenticated] # Tylko zalogowani (z tokenem)
 
-    def get(self, request):
-        # Serializujemy użytkownika wyciągniętego z tokena (request.user)
-        serializer = UserSerializer(request.user)
-        return Response(serializer.data)
+# --- PROFIL UŻYTKOWNIKA (GET oraz PATCH) ---
+# Zmieniamy na RetrieveUpdateAPIView - to automatycznie obsługuje pobieranie i edycję
+class CurrentUserView(generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserSerializer
+
+    # Nadpisujemy get_object, aby operować na aktualnie zalogowanym użytkowniku
+    # (dzięki temu nie musimy podawać ID w URLu, np. /api/users/me/)
+    def get_object(self):
+        return self.request.user
