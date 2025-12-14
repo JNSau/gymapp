@@ -11,7 +11,8 @@ import Plans from "./pages/Plans";
 import PlanDetails from "./pages/PlanDetails";
 import Profile from "./pages/Profile";
 import ActiveWorkout from "./pages/ActiveWorkout";
-import Survey from "./pages/Survey"; // <--- 1. IMPORT ANKIETY
+import Survey from "./pages/Survey";
+import MyWorkouts from "./pages/MyWorkouts"; // <--- 1. IMPORT MOICH TRENINGÓW
 
 // IMPORT BRAMKARZA I CONTEXTU
 import ProtectedRoute from "./components/ProtectedRoute"; 
@@ -32,10 +33,16 @@ function App() {
 
           {/* --- TRASY CHRONIONE (Tylko dla zalogowanych) --- */}
           
-          {/* 2. NOWA TRASA: ANKIETA */}
           <Route path="/survey" element={
             <ProtectedRoute>
               <Survey />
+            </ProtectedRoute>
+          } />
+
+          {/* 2. NOWA TRASA: MOJE TRENINGI */}
+          <Route path="/my-workouts" element={
+            <ProtectedRoute>
+              <MyWorkouts />
             </ProtectedRoute>
           } />
 

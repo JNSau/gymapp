@@ -33,10 +33,15 @@ const Navbar = () => {
           <Link to="/exercises">Exercises</Link>
           <Link to="/plans">Plans</Link>
           
+          {/* NOWOŚĆ: Link My Workouts widoczny tylko dla zalogowanych */}
+          {user && (
+             <Link to="/my-workouts" style={{ color: "var(--accent)" }}>My Workouts</Link>
+          )}
+
           {user ? (
             <div className="user-section" style={{ display: "flex", alignItems: "center", gap: "20px" }}>
               
-              {/* --- LINK DO PROFILU (Wygląda jak User Tag) --- */}
+              {/* --- LINK DO PROFILU --- */}
               <Link 
                 to="/profile" 
                 className="hover-effect"
@@ -52,7 +57,7 @@ const Navbar = () => {
                   border: "1px solid #333"
                 }}
               >
-                {/* Ikona awatara (lub emoji) */}
+                {/* Ikona awatara */}
                 <div style={{ 
                     width: "24px", height: "24px", 
                     background: "var(--accent)", borderRadius: "50%", 
@@ -64,7 +69,7 @@ const Navbar = () => {
                 <span style={{ fontSize: "0.9rem", fontWeight: "500" }}>{user.username}</span>
               </Link>
 
-              {/* --- PRZYCISK LOGOUT (Sleek & Minimal) --- */}
+              {/* --- PRZYCISK LOGOUT --- */}
               <button 
                 onClick={logout} 
                 style={logoutButtonStyle}
@@ -77,7 +82,6 @@ const Navbar = () => {
                     e.currentTarget.style.color = "var(--text-secondary)";
                 }}
               >
-                {/* Ikona wylogowania (SVG) */}
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                     <polyline points="16 17 21 12 16 7"></polyline>

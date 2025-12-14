@@ -4,7 +4,7 @@
   --bg-secondary: #1E1E1E; /* Ciemny szary (karty) */
   --bg-hover: #2C2C2C;     /* Kolor po najechaniu */
   
-  --accent: #D4FF00;       /* Neonowa limonka (Twój główny kolor) */
+  --accent: #D4FF00;       /* Neonowa limonka */
   --accent-hover: #b3d900;
   
   --text-main: #FFFFFF;
@@ -26,10 +26,7 @@ body {
 }
 
 /* Reset linków */
-a {
-  text-decoration: none;
-  color: inherit;
-}
+a { text-decoration: none; color: inherit; }
 
 /* Layout strony */
 .container {
@@ -39,16 +36,11 @@ a {
 }
 
 /* Główne nagłówki */
-h1, h2, h3 {
-  margin-top: 0;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-
+h1, h2, h3 { margin-top: 0; font-weight: 700; letter-spacing: -0.5px; }
 h1 { font-size: 2.5rem; color: var(--accent); }
 h2 { font-size: 1.8rem; border-bottom: 2px solid var(--accent); padding-bottom: 10px; display: inline-block; }
 
-/* Globalne style przycisków */
+/* --- PRZYCISKI --- */
 button.btn-primary {
   background-color: var(--accent);
   color: #000;
@@ -68,6 +60,13 @@ button.btn-primary:hover {
   box-shadow: 0 4px 15px rgba(212, 255, 0, 0.3);
 }
 
+button.btn-primary:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
 button.btn-danger {
   background-color: transparent;
   border: 1px solid var(--danger);
@@ -82,13 +81,31 @@ button.btn-danger:hover {
   background-color: var(--danger);
   color: white;
 }
-/* Grid dla kart */
-.grid-layout {
+
+/* --- KARTY (Card) --- */
+.card {
+  background-color: var(--bg-secondary);
+  border: 1px solid #333;
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: var(--transition);
+}
+
+.grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsywny grid */
   gap: 25px;
   padding-bottom: 50px;
 }
+
+/* Efekt najechania na kartę */
+.hover-effect:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* --- FORMULARZE --- */
 .auth-container {
   max-width: 400px;
   margin: 80px auto;
@@ -99,10 +116,7 @@ button.btn-danger:hover {
   text-align: center;
 }
 
-.form-group {
-  margin-bottom: 20px;
-  text-align: left;
-}
+.form-group { margin-bottom: 20px; text-align: left; }
 
 input, select {
   width: 100%;
@@ -113,7 +127,7 @@ input, select {
   border-radius: 8px;
   color: white;
   font-size: 1rem;
-  box-sizing: border-box; /* Ważne, żeby padding nie rozpychał */
+  box-sizing: border-box;
 }
 
 input:focus, select:focus {
@@ -121,7 +135,7 @@ input:focus, select:focus {
   border-color: var(--accent);
 }
 
-/* Style Badge (Trudność, Partie mięśni) */
+/* --- BADGE --- */
 .badge {
   display: inline-block;
   padding: 4px 10px;
@@ -131,24 +145,128 @@ input:focus, select:focus {
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-.badge-muscle { background-color: #333; color: var(--accent); border: 1px solid var(--accent); }
-.badge-diff { background-color: #444; color: white; }
 .badge-level { background-color: var(--accent); color: black; }
 
-/* Układ tabeli w DayCard */
-.exercise-list {
-  list-style: none;
-  padding: 0;
-  margin-top: 15px;
-}
+/* --- EXERCISE LIST (w DayCard) --- */
+.exercise-list { list-style: none; padding: 0; margin-top: 0; }
 
 .exercise-item {
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  align-items: center;
+  padding: 15px 25px;
   border-bottom: 1px solid #333;
 }
 .exercise-item:last-child { border-bottom: none; }
-
-.exercise-name { font-weight: 600; color: white; }
 .exercise-meta { color: var(--text-secondary); font-size: 0.9rem; }
+
+
+/* --- PREMIUM TOAST NOTIFICATION (ŚRODEK EKRANU) --- */
+.toast-notification {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Idealny środek */
+  
+  background: rgba(18, 18, 18, 0.95); /* Prawie czarne, lekkie przezroczystości */
+  border: 2px solid var(--accent);
+  color: white;
+  padding: 40px 60px;
+  border-radius: 20px;
+  
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 255, 0, 0.2);
+  backdrop-filter: blur(10px);
+  z-index: 9999;
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 20px;
+  min-width: 320px;
+
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.toast-icon { font-size: 3rem; }
+.toast-message { font-size: 1.3rem; font-weight: bold; }
+
+@keyframes popIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* --- EXERCISES GRID (Naprawa układu) --- */
+.exercises-grid {
+  display: grid;
+  /* Kafelki mają min. 280px szerokości, reszta wypełnia rząd */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+  gap: 25px;
+  margin-top: 30px;
+}
+
+/* --- KARTA ĆWICZENIA (Styl Premium) --- */
+.exercise-card {
+  background-color: var(--bg-secondary); /* Ciemne tło */
+  border: 1px solid #333;                /* Subtelna ramka domyślna */
+  border-radius: 15px;
+  padding: 25px;
+  transition: all 0.3s ease;             /* Płynna animacja */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-decoration: none;                 /* Usuwa podkreślenie linku */
+  color: white;
+  position: relative;
+  overflow: hidden;
+  min-height: 180px; /* Żeby karty były równe */
+}
+
+/* Efekt HOVER */
+.exercise-card:hover {
+  transform: translateY(-7px);           /* Lekkie uniesienie */
+  border-color: var(--accent);           /* Ramka świeci na zielono/żółto */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 15px rgba(212, 255, 0, 0.1); /* Poświata */
+}
+
+/* Pasek ozdobny na górze karty (pojawia się po najechaniu) */
+.exercise-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--accent);
+  opacity: 0; 
+  transition: opacity 0.3s;
+}
+
+.exercise-card:hover::before {
+  opacity: 1;
+}
+
+/* Badge (Partia mięśni) */
+.muscle-badge {
+  background: #333;
+  color: #ccc;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: 1px solid #444;
+  display: inline-block;
+  margin-bottom: 15px;
+  align-self: flex-start;
+}
+.exercise-img {
+  width: 100%;
+  height: 200px;           /* Stała wysokość, żeby kafelki były równe */
+  object-fit: cover;       /* Przycinanie zdjęcia zamiast rozciągania */
+  border-radius: 8px;      /* Lekkie zaokrąglenie rogów zdjęcia */
+  margin-bottom: 15px;     /* Odstęp od tytułu */
+  background-color: #000;  /* Tło pod spodem w razie wolnego ładowania */
+  border: 1px solid #333;
+}
