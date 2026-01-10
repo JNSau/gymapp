@@ -5,6 +5,7 @@ Django settings for config project.
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from datetime import timedelta  # <--- 1. WAŻNY IMPORT
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -36,7 +37,7 @@ INSTALLED_APPS = [
     # REST & CORS
     'rest_framework',
     'rest_framework.authtoken',
-    'corsheaders',  # To musi być zainstalowane (pip install django-cors-headers)
+    'corsheaders',
 
     # Your apps
     'users',
@@ -50,7 +51,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
 
-    # CORS (Musi być jak najwyżej, przed CommonMiddleware)
+    # CORS (Musi być jak najwyżej)
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 
@@ -60,17 +61,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# ----------- CORS CONFIGURATION (NAPRAWIONE) -----------
-# To pozwala na wysyłanie tokenów/ciasteczek
+# ----------- CORS CONFIGURATION -----------
 CORS_ALLOW_CREDENTIALS = True
 
-# To określa, kto konkretnie może się łączyć (Vite)
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
 
-# Opcjonalnie: Zaufane źródła dla CSRF (zabezpieczenie formularzy)
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
@@ -126,6 +124,15 @@ REST_FRAMEWORK = {
     )
 }
 
+# ----------- JWT SETTINGS (TUTAJ ZMIENIŁEM CZAS NA 2H) -----------
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),  # <--- 2 GODZINY SESJI
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # Token odświeżania na 1 dzień
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
 # ----------- INTERNATIONALIZATION -----------
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Europe/Warsaw'
@@ -138,10 +145,6 @@ STATIC_URL = 'static/'
 # ----------- DEFAULT PK -----------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-# ----------- MEDIA FILES (DODAJ TO) -----------
-# To jest URL publiczny (np. http://localhost:8000/media/obrazek.jpg)
+# ----------- MEDIA FILES -----------
 MEDIA_URL = '/media/'
-
-# To jest ścieżka fizyczna na dysku (folder media w głównym katalogu)
 MEDIA_ROOT = BASE_DIR / 'media'
