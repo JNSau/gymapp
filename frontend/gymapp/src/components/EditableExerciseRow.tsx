@@ -14,18 +14,45 @@ const EditableExerciseRow = ({ exercise, isEditing, allExercises = [] }: Props) 
   const [rest, setRest] = useState(exercise.rest_time);
   
   // Stan wybranego ćwiczenia (ID).
-  // exercise.exercise to w Django ID ćwiczenia (np. 15)
   const [selectedExerciseId, setSelectedExerciseId] = useState(exercise.exercise); 
+
+  // --- 1. FUNKCJE ZABEZPIECZAJĄCE (BLOKADY) ---
+
+  // Blokada klawiszy dla pól stricte liczbowych (np. Sets)
+  const blockInvalidChar = (e: React.KeyboardEvent) => {
+    if (['-', '+', 'e', 'E'].includes(e.key)) {
+        e.preventDefault();
+    }
+  };
+
+  // Blokada wklejania minusów
+  const blockPaste = (e: React.ClipboardEvent) => {
+    const pasteData = e.clipboardData.getData('text');
+    if (pasteData.includes('-') || pasteData.includes('+')) {
+        e.preventDefault();
+    }
+  };
+
+  // Funkcja czyszcząca inputy tekstowe (Reps/Rest)
+  // Pozwala na "8-12" (zakres), ale blokuje "-5" (ujemne)
+  const sanitizeTextParams = (value: string) => {
+      // Jeśli wartość zaczyna się od minusa, usuń go
+      if (value.startsWith('-')) {
+          return value.replace('-', '');
+      }
+      return value;
+  };
+
+  // --- KONIEC FUNKCJI ZABEZPIECZAJĄCYCH ---
 
   // Funkcja zapisu
   const handleSave = async (newExerciseId?: number) => {
-    // Jeśli podaliśmy nowe ID (przy zmianie selecta) to użyj jego, w przeciwnym razie obecny stan
     const idToSave = newExerciseId || selectedExerciseId;
 
     try {
       await updateExerciseSettings(exercise.id, {
-        exercise_id: Number(idToSave), // Wysyłamy ID nowego ćwiczenia
-        sets: Number(sets),
+        exercise_id: Number(idToSave),
+        sets: Number(sets), // Tu zawsze liczba
         reps: reps,
         rest_time: rest,
       });
@@ -39,7 +66,6 @@ const EditableExerciseRow = ({ exercise, isEditing, allExercises = [] }: Props) 
   const handleExerciseChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
       const newId = Number(e.target.value);
       setSelectedExerciseId(newId);
-      // Zapisujemy od razu po wyborze z listy, żeby użytkownik widział efekt
       handleSave(newId); 
   };
 
@@ -69,7 +95,7 @@ const EditableExerciseRow = ({ exercise, isEditing, allExercises = [] }: Props) 
                 width: "100%", 
                 padding: "10px", 
                 background: "#111", 
-                border: "1px solid var(--accent)", // Zielona ramka wyróżnia
+                border: "1px solid var(--accent)", 
                 color: "white", 
                 borderRadius: "4px",
                 fontWeight: "bold",
@@ -86,34 +112,45 @@ const EditableExerciseRow = ({ exercise, isEditing, allExercises = [] }: Props) 
       
       {/* PARAMETRY (Sets, Reps, Rest) */}
       <div style={{ display: "flex", gap: "15px" }}>
+        
+        {/* SETS - TYP NUMBER (Pełna blokada minusów) */}
         <div style={{ flex: 1 }}>
             <label style={{fontSize: "0.7rem", color: "#888", display: "block", marginBottom: "4px"}}>Sets</label>
             <input 
                 type="number" 
+                min="0"
                 value={sets} 
-                onChange={(e) => setSets(e.target.value)} 
+                onKeyDown={blockInvalidChar} // Blokuje klawisz
+                onPaste={blockPaste} // Blokuje wklejanie
+                onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (val >= 0) setSets(e.target.value);
+                }} 
                 onBlur={() => handleSave()}
                 style={{ width: "100%", padding: "8px", background: "#111", border: "1px solid #444", color: "white", borderRadius: "4px" }}
             />
         </div>
         
+        {/* REPS - TYP TEXT (Dozwolone zakresy "8-12", ale blokada ujemnych "-8") */}
         <div style={{ flex: 1 }}>
             <label style={{fontSize: "0.7rem", color: "#888", display: "block", marginBottom: "4px"}}>Reps</label>
             <input 
                 type="text" 
                 value={reps} 
-                onChange={(e) => setReps(e.target.value)} 
+                // Nie dajemy onKeyDown={blockInvalidChar}, bo zablokowałoby myślnik w "8-12"
+                onChange={(e) => setReps(sanitizeTextParams(e.target.value))} 
                 onBlur={() => handleSave()}
                 style={{ width: "100%", padding: "8px", background: "#111", border: "1px solid #444", color: "white", borderRadius: "4px" }}
             />
         </div>
 
+        {/* REST - TYP TEXT (Dozwolone "60s", blokada ujemnych) */}
         <div style={{ flex: 1 }}>
             <label style={{fontSize: "0.7rem", color: "#888", display: "block", marginBottom: "4px"}}>Rest</label>
             <input 
                 type="text" 
                 value={rest} 
-                onChange={(e) => setRest(e.target.value)} 
+                onChange={(e) => setRest(sanitizeTextParams(e.target.value))} 
                 onBlur={() => handleSave()}
                 style={{ width: "100%", padding: "8px", background: "#111", border: "1px solid #444", color: "white", borderRadius: "4px" }}
             />

@@ -25,7 +25,7 @@ const Exercises = () => {
     <div className="container" style={{ paddingBottom: "80px" }}>
       
       <div style={{ textAlign: "center", margin: "40px 0" }}>
-        <h1>Exercise Library 📚</h1>
+        <h1>Exercise Library </h1>
         <p style={{ color: "var(--text-secondary)" }}>
           Browse our comprehensive database of movements.
         </p>

@@ -93,7 +93,8 @@ button.btn-danger:hover {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsywny grid */
+  /* Zmieniono minmax na 280px dla lepszego RWD na małych telefonach */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
   gap: 25px;
   padding-bottom: 50px;
 }
@@ -269,4 +270,68 @@ input:focus, select:focus {
   margin-bottom: 15px;     /* Odstęp od tytułu */
   background-color: #000;  /* Tło pod spodem w razie wolnego ładowania */
   border: 1px solid #333;
+}
+
+/* ========================================================================== */
+/* RESPONSYWNOŚĆ (RWD)                              */
+/* ========================================================================== */
+
+/* Klasa pomocnicza dla EditableExerciseRow - domyślnie poziomo */
+.flex-row-responsive {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+
+/* TABLETY I MNIEJSZE LAPTOPY (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .container {
+    padding: 15px;
+  }
+}
+
+/* TELEFONY I TABLETY PIONOWO (max-width: 768px) */
+@media (max-width: 768px) {
+  /* Zmniejszamy marginesy, żeby zyskać miejsce */
+  .container {
+    padding: 10px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Grid staje się jednokolumnowy na wąskich ekranach */
+  .grid, .exercises-grid {
+    grid-template-columns: 1fr; /* Jeden kafelek pod drugim */
+    gap: 15px;
+  }
+
+  /* Mniejsze nagłówki */
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.4rem; }
+  h3 { font-size: 1.1rem; }
+  
+  /* Inputy większe/wygodniejsze do klikania palcem */
+  input, select, button {
+    font-size: 16px; /* Zapobiega zoomowaniu na iPhone */
+    padding: 12px;
+  }
+}
+
+/* MAŁE TELEFONY (max-width: 480px) */
+@media (max-width: 480px) {
+  /* Inputy w edycji ćwiczeń jeden pod drugim */
+  .flex-row-responsive {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  /* Toast notification na cały ekran (lub prawie cały) */
+  .toast-notification {
+    width: 90%;
+    min-width: auto;
+    padding: 20px;
+  }
+  
+  .toast-icon { font-size: 2rem; }
+  .toast-message { font-size: 1rem; }
 }
