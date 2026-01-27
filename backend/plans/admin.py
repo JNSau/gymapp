@@ -1,11 +1,11 @@
 from django.contrib import admin
 from .models import TrainingPlan, TrainingDay, ExerciseInPlan, WorkoutSession, WorkoutLog
 
-# --- PLANY TRENINGOWE ---
+
 
 @admin.register(TrainingPlan)
 class TrainingPlanAdmin(admin.ModelAdmin):
-    list_display = ('name', 'level', 'user', 'created_at') # Dodałem 'user', żebyś widział czyj to plan
+    list_display = ('name', 'level', 'user', 'created_at')
     list_filter = ('level', 'created_at')
     search_fields = ('name', 'description', 'user__username')
     ordering = ('pk',)
@@ -24,18 +24,18 @@ class ExerciseInPlanAdmin(admin.ModelAdmin):
     search_fields = ('training_day__plan__name', 'exercise__name')
     ordering = ('training_day', 'exercise')
 
-# --- HISTORIA TRENINGÓW (Nowe) ---
+
 
 @admin.register(WorkoutSession)
 class WorkoutSessionAdmin(admin.ModelAdmin):
     list_display = ('user', 'custom_name', 'start_time', 'duration_minutes')
     list_filter = ('start_time', 'user')
     search_fields = ('user__username', 'custom_name', 'notes')
-    ordering = ('-start_time',) # Najnowsze treningi na górze
+    ordering = ('-start_time',)
 
 @admin.register(WorkoutLog)
 class WorkoutLogAdmin(admin.ModelAdmin):
     list_display = ('session', 'exercise', 'set_number', 'weight_kg', 'reps_done')
-    list_filter = ('exercise', 'session__user') # Filtrowanie po ćwiczeniu i użytkowniku
+    list_filter = ('exercise', 'session__user')
     search_fields = ('exercise__name', 'session__user__username')
     ordering = ('session', 'set_number')

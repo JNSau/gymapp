@@ -1,15 +1,13 @@
 from rest_framework import serializers
 from .models import TrainingPlan, TrainingDay, ExerciseInPlan, WorkoutSession, WorkoutLog
 from exercises.serializers import ExerciseSerializer
-from exercises.models import Exercise  # <--- WAŻNE: Musimy zaimportować model Exercise do query setu
+from exercises.models import Exercise
 
 
-# --- SERIALIZERY PLANÓW ---
+
 
 class ExerciseInPlanSerializer(serializers.ModelSerializer):
-    """
-    Służy do WYŚWIETLANIA planu (read-only).
-    """
+
     exercise_name = serializers.CharField(source='exercise.name', read_only=True)
     exercise_image = serializers.URLField(source='exercise.image_url', read_only=True)
 
@@ -19,16 +17,13 @@ class ExerciseInPlanSerializer(serializers.ModelSerializer):
 
 
 class ExerciseInPlanUpdateSerializer(serializers.ModelSerializer):
-    """
-    Służy do EDYCJI wiersza w planie.
-    Pozwala zmienić parametry ORAZ podmienić ćwiczenie (przez exercise_id).
-    """
+
     exercise_name = serializers.CharField(source='exercise.name', read_only=True)
 
-    # To pole pozwala na zmianę ćwiczenia poprzez wysłanie jego ID
+
     exercise_id = serializers.PrimaryKeyRelatedField(
         queryset=Exercise.objects.all(),
-        source='exercise',  # Mapuje wysłane ID na pole modelu 'exercise'
+        source='exercise',
         write_only=True
     )
 
@@ -53,7 +48,7 @@ class TrainingPlanSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-# --- SERIALIZERY HISTORII ---
+
 
 class WorkoutLogSerializer(serializers.ModelSerializer):
     exercise_name = serializers.CharField(source='exercise.name', read_only=True)

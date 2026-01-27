@@ -5,17 +5,17 @@ Django settings for config project.
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-from datetime import timedelta  # <--- 1. WAŻNY IMPORT
+from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load environment variables
+
 load_dotenv(BASE_DIR / '.env')
 
-# SECURITY WARNING: keep the secret key used in production secret!
+
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
-# Debug only for development
+
 DEBUG = True
 
 ALLOWED_HOSTS = [
@@ -24,9 +24,9 @@ ALLOWED_HOSTS = [
     '[::1]',
 ]
 
-# ----------- INSTALLED APPS -----------
+
 INSTALLED_APPS = [
-    # Django default
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -34,24 +34,24 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # REST & CORS
+
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
 
-    # Your apps
+
     'users',
     'exercises',
     'plans',
     'feedback',
 ]
 
-# ----------- MIDDLEWARE -----------
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
 
-    # CORS (Musi być jak najwyżej)
+
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 
@@ -61,7 +61,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# ----------- CORS CONFIGURATION -----------
+
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
@@ -76,7 +76,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 ROOT_URLCONF = 'config.urls'
 
-# ----------- TEMPLATES -----------
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -94,7 +94,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# ----------- DATABASE -----------
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -106,7 +106,7 @@ DATABASES = {
     }
 }
 
-# ----------- PASSWORD VALIDATION -----------
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -114,37 +114,37 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Use custom user model
+
 AUTH_USER_MODEL = "users.User"
 
-# ----------- REST FRAMEWORK CONFIG -----------
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
 
-# ----------- JWT SETTINGS (TUTAJ ZMIENIŁEM CZAS NA 2H) -----------
+
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),  # <--- 2 GODZINY SESJI
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # Token odświeżania na 1 dzień
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-# ----------- INTERNATIONALIZATION -----------
+
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Europe/Warsaw'
 USE_I18N = True
 USE_TZ = True
 
-# ----------- STATIC FILES -----------
+
 STATIC_URL = 'static/'
 
-# ----------- DEFAULT PK -----------
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ----------- MEDIA FILES -----------
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'

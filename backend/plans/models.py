@@ -3,7 +3,7 @@ from django.conf import settings
 from exercises.models import Exercise
 
 
-# --- MODELE PLANU TRENINGOWEGO ---
+
 
 class TrainingPlan(models.Model):
     class Level(models.TextChoices):
@@ -11,9 +11,7 @@ class TrainingPlan(models.Model):
         INTERMEDIATE = "INTERMEDIATE", "Intermediate"
         ADVANCED = "ADVANCED", "Advanced"
 
-    # ZMIANA: Dodajemy właściciela planu.
-    # null=True -> Plan publiczny (systemowy)
-    # user=... -> Plan prywatny (skopiowany)
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True,
                              related_name="plans")
 
@@ -45,7 +43,7 @@ class ExerciseInPlan(models.Model):
     training_day = models.ForeignKey(TrainingDay, on_delete=models.CASCADE, related_name="exercises")
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
 
-    # Parametry planowane
+
     sets = models.PositiveIntegerField(default=3)
     reps = models.CharField(max_length=20, default="10-12")
     rest_time = models.CharField(max_length=20, default="60s")
@@ -57,7 +55,7 @@ class ExerciseInPlan(models.Model):
         return f"{self.exercise.name} – {self.sets}x{self.reps}"
 
 
-# --- HISTORIA TRENINGÓW ---
+
 
 class WorkoutSession(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

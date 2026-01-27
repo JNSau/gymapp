@@ -8,11 +8,11 @@ class Exercise(models.Model):
         SHOULDERS = "SHOULDERS", "Shoulders"
         LEGS = "LEGS", "Legs"
 
-        # --- ROZBICIE ARMS NA 3 PARTIE ---
+
         BICEPS = "BICEPS", "Biceps"
         TRICEPS = "TRICEPS", "Triceps"
         FOREARMS = "FOREARMS", "Forearms"
-        # ---------------------------------
+
 
         CORE = "CORE", "Core"
         FULLBODY = "FULLBODY", "Full Body"
@@ -27,7 +27,7 @@ class Exercise(models.Model):
     muscle_group = models.CharField(max_length=20, choices=MuscleGroup.choices)
     difficulty = models.CharField(max_length=20, choices=Difficulty.choices)
 
-    # Obsługa zdjęć
+
     image = models.ImageField(upload_to='exercises/', blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
