@@ -8,15 +8,15 @@ const Survey = () => {
   const navigate = useNavigate();
   const { fetchUser } = useAuth();
 
-  // --- STANY ANKIETY ---
+  
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ wilks: number; level: string } | null>(null);
   
-  // --- NOWY STAN: Błędy walidacji ---
+  
   const [error, setError] = useState<string | null>(null);
 
-  // --- DANE UŻYTKOWNIKA ---
+  
   const [formData, setFormData] = useState({
     gender: "male",
     bodyWeight: "",
@@ -26,14 +26,14 @@ const Survey = () => {
     deadlift: "0",
   });
 
-  // --- OBSŁUGA INPUTÓW ---
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    // Jeśli użytkownik zaczyna pisać, usuwamy błąd
+    
     if (error) setError(null);
   };
 
-  // --- PRZEJŚCIE DO KROKU 2 (Z WALIDACJĄ) ---
+  
   const handleNextStep = () => {
     if (!formData.bodyWeight || Number(formData.bodyWeight) <= 0) {
         setError("Please enter a valid body weight (kg).");
@@ -48,7 +48,7 @@ const Survey = () => {
     setStep(2);
   };
 
-  // --- LOGIKA WILKS ---
+  
   const calculateWilksAndLevel = () => {
     const bw = parseFloat(formData.bodyWeight);
     const totalLift = 
@@ -56,13 +56,13 @@ const Survey = () => {
       parseFloat(formData.squat || "0") + 
       parseFloat(formData.deadlift || "0");
 
-    // Walidacja wagi (na wszelki wypadek)
+    
     if (!bw || bw <= 0) {
       setError("Invalid body weight.");
       return;
     }
 
-    // Współczynniki Wilks (Standard 2020/Original)
+    
     let a, b, c, d, e, f;
 
     if (formData.gender === "male") {
@@ -112,9 +112,9 @@ const Survey = () => {
     }
   };
 
-  // --- RENDEROWANIE KROKÓW ---
+  
 
-  // KROK 1: DANE OSOBOWE
+  
   if (step === 1) {
     return (
       <div className="container" style={{ maxWidth: "500px", marginTop: "50px" }}>
@@ -161,7 +161,7 @@ const Survey = () => {
                 </div>
             </div>
 
-            {/* --- KOMUNIKAT BŁĘDU (Zamiast Alert) --- */}
+            
             {error && (
                 <div style={{ color: "var(--danger)", marginTop: "20px", background: "rgba(255, 0, 0, 0.1)", padding: "10px", borderRadius: "5px", fontSize: "0.9rem" }}>
                     ⚠️ {error}
@@ -180,7 +180,7 @@ const Survey = () => {
     );
   }
 
-  // KROK 2: WYNIKI SIŁOWE
+  
   if (step === 2 && !result) {
     return (
         <div className="container" style={{ maxWidth: "500px", marginTop: "50px" }}>
@@ -211,7 +211,7 @@ const Survey = () => {
                   />
               </div>
 
-              {/* --- KOMUNIKAT BŁĘDU --- */}
+              
               {error && (
                 <div style={{ color: "var(--danger)", marginTop: "10px", textAlign: "center" }}>
                     {error}
@@ -241,7 +241,7 @@ const Survey = () => {
       );
   }
 
-  // KROK 3: WYNIK (Bez zmian logicznych, tylko render)
+  
   if (result) {
     return (
         <div className="container" style={{ textAlign: "center", paddingTop: "50px" }}>

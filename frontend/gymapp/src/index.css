@@ -1,5 +1,5 @@
 :root {
-  /* Paleta Kolorów - Dark Fitness Theme */
+  
   --bg-primary: #121212;   /* Głęboka czerń */
   --bg-secondary: #1E1E1E; /* Ciemny szary (karty) */
   --bg-hover: #2C2C2C;     /* Kolor po najechaniu */
@@ -25,22 +25,22 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Reset linków */
+
 a { text-decoration: none; color: inherit; }
 
-/* Layout strony */
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
 
-/* Główne nagłówki */
+
 h1, h2, h3 { margin-top: 0; font-weight: 700; letter-spacing: -0.5px; }
 h1 { font-size: 2.5rem; color: var(--accent); }
 h2 { font-size: 1.8rem; border-bottom: 2px solid var(--accent); padding-bottom: 10px; display: inline-block; }
 
-/* --- PRZYCISKI --- */
+
 button.btn-primary {
   background-color: var(--accent);
   color: #000;
@@ -82,7 +82,7 @@ button.btn-danger:hover {
   color: white;
 }
 
-/* --- KARTY (Card) --- */
+
 .card {
   background-color: var(--bg-secondary);
   border: 1px solid #333;
@@ -93,20 +93,20 @@ button.btn-danger:hover {
 
 .grid {
   display: grid;
-  /* Zmieniono minmax na 280px dla lepszego RWD na małych telefonach */
+  
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
   gap: 25px;
   padding-bottom: 50px;
 }
 
-/* Efekt najechania na kartę */
+
 .hover-effect:hover {
   transform: translateY(-5px);
   border-color: var(--accent);
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-/* --- FORMULARZE --- */
+
 .auth-container {
   max-width: 400px;
   margin: 80px auto;
@@ -136,7 +136,7 @@ input:focus, select:focus {
   border-color: var(--accent);
 }
 
-/* --- BADGE --- */
+
 .badge {
   display: inline-block;
   padding: 4px 10px;
@@ -148,7 +148,7 @@ input:focus, select:focus {
 }
 .badge-level { background-color: var(--accent); color: black; }
 
-/* --- EXERCISE LIST (w DayCard) --- */
+
 .exercise-list { list-style: none; padding: 0; margin-top: 0; }
 
 .exercise-item {
@@ -162,14 +162,14 @@ input:focus, select:focus {
 .exercise-meta { color: var(--text-secondary); font-size: 0.9rem; }
 
 
-/* --- PREMIUM TOAST NOTIFICATION (ŚRODEK EKRANU) --- */
+
 .toast-notification {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* Idealny środek */
+  transform: translate(-50%, -50%); 
   
-  background: rgba(18, 18, 18, 0.95); /* Prawie czarne, lekkie przezroczystości */
+  background: rgba(18, 18, 18, 0.95); 
   border: 2px solid var(--accent);
   color: white;
   padding: 40px 60px;
@@ -198,40 +198,40 @@ input:focus, select:focus {
   to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
-/* --- EXERCISES GRID (Naprawa układu) --- */
+
 .exercises-grid {
   display: grid;
-  /* Kafelki mają min. 280px szerokości, reszta wypełnia rząd */
+  
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
   gap: 25px;
   margin-top: 30px;
 }
 
-/* --- KARTA ĆWICZENIA (Styl Premium) --- */
+
 .exercise-card {
-  background-color: var(--bg-secondary); /* Ciemne tło */
-  border: 1px solid #333;                /* Subtelna ramka domyślna */
+  background-color: var(--bg-secondary); 
+  border: 1px solid #333;                
   border-radius: 15px;
   padding: 25px;
-  transition: all 0.3s ease;             /* Płynna animacja */
+  transition: all 0.3s ease;            
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  text-decoration: none;                 /* Usuwa podkreślenie linku */
+  text-decoration: none;                 
   color: white;
   position: relative;
   overflow: hidden;
-  min-height: 180px; /* Żeby karty były równe */
+  min-height: 180px; 
 }
 
-/* Efekt HOVER */
+
 .exercise-card:hover {
-  transform: translateY(-7px);           /* Lekkie uniesienie */
-  border-color: var(--accent);           /* Ramka świeci na zielono/żółto */
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 15px rgba(212, 255, 0, 0.1); /* Poświata */
+  transform: translateY(-7px);           
+  border-color: var(--accent);           
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 15px rgba(212, 255, 0, 0.1); 
 }
 
-/* Pasek ozdobny na górze karty (pojawia się po najechaniu) */
+
 .exercise-card::before {
   content: '';
   position: absolute;
@@ -248,7 +248,7 @@ input:focus, select:focus {
   opacity: 1;
 }
 
-/* Badge (Partia mięśni) */
+
 .muscle-badge {
   background: #333;
   color: #ccc;
@@ -264,68 +264,66 @@ input:focus, select:focus {
 }
 .exercise-img {
   width: 100%;
-  height: 200px;           /* Stała wysokość, żeby kafelki były równe */
-  object-fit: cover;       /* Przycinanie zdjęcia zamiast rozciągania */
-  border-radius: 8px;      /* Lekkie zaokrąglenie rogów zdjęcia */
-  margin-bottom: 15px;     /* Odstęp od tytułu */
-  background-color: #000;  /* Tło pod spodem w razie wolnego ładowania */
+  height: 200px;           
+  object-fit: cover;       
+  border-radius: 8px;      
+  margin-bottom: 15px;     
+  background-color: #000;  
   border: 1px solid #333;
 }
 
-/* ========================================================================== */
-/* RESPONSYWNOŚĆ (RWD)                              */
-/* ========================================================================== */
 
-/* Klasa pomocnicza dla EditableExerciseRow - domyślnie poziomo */
+
+
 .flex-row-responsive {
   display: flex;
   flex-direction: row;
   gap: 15px;
 }
 
-/* TABLETY I MNIEJSZE LAPTOPY (max-width: 1024px) */
+
 @media (max-width: 1024px) {
   .container {
     padding: 15px;
   }
 }
 
-/* TELEFONY I TABLETY PIONOWO (max-width: 768px) */
+
 @media (max-width: 768px) {
-  /* Zmniejszamy marginesy, żeby zyskać miejsce */
+  
   .container {
     padding: 10px;
     width: 100%;
     max-width: 100%;
   }
 
-  /* Grid staje się jednokolumnowy na wąskich ekranach */
+  
   .grid, .exercises-grid {
-    grid-template-columns: 1fr; /* Jeden kafelek pod drugim */
+    grid-template-columns: 1fr; 
     gap: 15px;
   }
 
-  /* Mniejsze nagłówki */
+  
   h1 { font-size: 1.8rem; }
   h2 { font-size: 1.4rem; }
   h3 { font-size: 1.1rem; }
   
-  /* Inputy większe/wygodniejsze do klikania palcem */
+  
   input, select, button {
-    font-size: 16px; /* Zapobiega zoomowaniu na iPhone */
+    font-size: 16px; 
     padding: 12px;
   }
 }
 
-/* MAŁE TELEFONY (max-width: 480px) */
+
 @media (max-width: 480px) {
-  /* Inputy w edycji ćwiczeń jeden pod drugim */
+  
   .flex-row-responsive {
     flex-direction: column;
     gap: 10px;
   }
   
-  /* Toast notification na cały ekran (lub prawie cały) */
+  
   .toast-notification {
     width: 90%;
     min-width: auto;

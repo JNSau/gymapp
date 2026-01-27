@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate, Link } from "react-router-dom"; // Dodano brakujące importy
+import { useNavigate, Link } from "react-router-dom"; 
 import "../index.css";
 
 const Login = () => {
@@ -8,13 +8,13 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // Opcjonalnie do przekierowania po zalogowaniu
+  const navigate = useNavigate(); 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await login(username, password);
-      navigate("/"); // Przekierowanie na stronę główną po zalogowaniu
+      navigate("/"); 
     } catch {
       setError("Invalid username or password");
     }

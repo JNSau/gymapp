@@ -7,13 +7,13 @@ type Props = {
     name: string;
     muscle_group: string;
     difficulty: string;
-    image_url?: string; // <--- 2. Zmienione na image_url (tak jak w Django)
-    image?: string; // Zostawiam jako fallback
+    image_url?: string; 
+    image?: string; 
   };
 };
 
 const ExerciseCard = ({ exercise }: Props) => {
-  // Sprawdzamy, czy backend wysłał image_url czy image
+  
   const imgSrc = exercise.image_url || exercise.image;
 
   return (
@@ -21,7 +21,7 @@ const ExerciseCard = ({ exercise }: Props) => {
       {/* Sekcja obrazka */}
       <div 
         style={{ 
-          height: "180px", // Trochę wyższe dla lepszego wyglądu
+          height: "180px", 
           overflow: "hidden", 
           background: imgSrc ? "transparent" : "linear-gradient(135deg, #333, #111)",
           display: "flex",

@@ -5,13 +5,13 @@ import "./Navbar.css";
 const Navbar = () => {
   const { user, logout } = useAuth();
 
-  // Style dla przycisku Logout (Ghost Button)
+  
   const logoutButtonStyle: React.CSSProperties = {
     background: "transparent",
     border: "1px solid #444",
-    color: "var(--text-secondary)", // Szary kolor tekstu
+    color: "var(--text-secondary)", 
     padding: "8px 16px",
-    borderRadius: "20px", // Pigułka
+    borderRadius: "20px", 
     fontSize: "0.9rem",
     cursor: "pointer",
     transition: "all 0.2s ease",
@@ -33,7 +33,7 @@ const Navbar = () => {
           <Link to="/exercises">Exercises</Link>
           <Link to="/plans">Plans</Link>
           
-          {/* NOWOŚĆ: Link My Workouts widoczny tylko dla zalogowanych */}
+          
           {user && (
              <Link to="/my-workouts" style={{ color: "var(--accent)" }}>My Workouts</Link>
           )}
@@ -41,7 +41,7 @@ const Navbar = () => {
           {user ? (
             <div className="user-section" style={{ display: "flex", alignItems: "center", gap: "20px" }}>
               
-              {/* --- LINK DO PROFILU --- */}
+              
               <Link 
                 to="/profile" 
                 className="hover-effect"
@@ -57,7 +57,7 @@ const Navbar = () => {
                   border: "1px solid #333"
                 }}
               >
-                {/* Ikona awatara */}
+                
                 <div style={{ 
                     width: "24px", height: "24px", 
                     background: "var(--accent)", borderRadius: "50%", 
@@ -69,16 +69,16 @@ const Navbar = () => {
                 <span style={{ fontSize: "0.9rem", fontWeight: "500" }}>{user.username}</span>
               </Link>
 
-              {/* --- PRZYCISK LOGOUT --- */}
+              
               <button 
                 onClick={logout} 
                 style={logoutButtonStyle}
                 onMouseOver={(e) => {
-                    e.currentTarget.style.borderColor = "#ff4d4d"; // Czerwony przy hoverze
+                    e.currentTarget.style.borderColor = "#ff4d4d"; 
                     e.currentTarget.style.color = "#ff4d4d";
                 }}
                 onMouseOut={(e) => {
-                    e.currentTarget.style.borderColor = "#444"; // Powrót do szarego
+                    e.currentTarget.style.borderColor = "#444"; 
                     e.currentTarget.style.color = "var(--text-secondary)";
                 }}
               >

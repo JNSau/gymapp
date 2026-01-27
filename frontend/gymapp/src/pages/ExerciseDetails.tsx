@@ -29,7 +29,7 @@ const ExerciseDetails = () => {
 
       <div className="card" style={{ padding: "40px", display: "flex", gap: "40px", flexWrap: "wrap" }}>
         
-        {/* Left Column: Image */}
+        
         <div style={{ flex: "1 1 300px", minWidth: "300px" }}>
           <div style={{ 
             height: "400px",
@@ -49,7 +49,7 @@ const ExerciseDetails = () => {
           </div>
         </div>
 
-        {/* Right Column: Content */}
+        
         <div style={{ flex: "2 1 400px" }}>
           <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
              <span className="badge badge-muscle">{exercise.muscle_group}</span>

@@ -25,8 +25,8 @@ const MyWorkouts = () => {
   };
 
   const handleDelete = async (id: number, e: React.MouseEvent) => {
-    e.preventDefault(); // Zapobiega wejściu w plan
-    e.stopPropagation(); // Zatrzymuje propagację kliknięcia
+    e.preventDefault(); 
+    e.stopPropagation(); 
 
     try {
         await deletePlan(id);
@@ -44,7 +44,7 @@ const MyWorkouts = () => {
   return (
     <div className="container" style={{ paddingBottom: "80px" }}>
       
-      {/* TOAST NOTIFICATION */}
+      
       {notification && (
         <div className="toast-notification">
             <div className="toast-icon">
@@ -76,10 +76,10 @@ const MyWorkouts = () => {
                         display: "flex", 
                         flexDirection: "column",
                         height: "100%",
-                        minHeight: "200px" // Żeby karty były równe
+                        minHeight: "200px" 
                     }}>
                         
-                        {/* GÓRA KARTY */}
+                        
                         <div style={{ flex: 1 }}>
                             <div style={{ marginBottom: "10px" }}>
                                 <span style={{ fontSize: "0.75rem", color: "var(--text-secondary)", textTransform: "uppercase", letterSpacing: "1px", border: "1px solid #333", padding: "4px 8px", borderRadius: "4px" }}>
@@ -94,7 +94,7 @@ const MyWorkouts = () => {
                             </p>
                         </div>
                         
-                        {/* DÓŁ KARTY (FOOTER) */}
+                        
                         <div style={{ 
                             marginTop: "20px", 
                             paddingTop: "15px", 
@@ -104,7 +104,7 @@ const MyWorkouts = () => {
                             alignItems: "center" 
                         }}>
                             
-                            {/* START (LEWA STRONA) */}
+                            
                             <span style={{ 
                                 color: "var(--accent)", 
                                 fontWeight: "bold", 
@@ -114,7 +114,7 @@ const MyWorkouts = () => {
                                 START TRAINING
                             </span>
 
-                            {/* DELETE (PRAWA STRONA) - TEKSTOWY PRZYCISK */}
+                            
                             <button 
                                 onClick={(e) => handleDelete(plan.id, e)}
                                 style={{ 

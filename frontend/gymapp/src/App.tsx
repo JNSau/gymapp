@@ -4,7 +4,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 
-// Importy stron chronionych
+
 import Exercises from "./pages/Exercises";
 import ExerciseDetails from "./pages/ExerciseDetails";
 import Plans from "./pages/Plans";
@@ -14,7 +14,7 @@ import ActiveWorkout from "./pages/ActiveWorkout";
 import Survey from "./pages/Survey";
 import MyWorkouts from "./pages/MyWorkouts"; // <--- 1. IMPORT MOICH TRENINGÓW
 
-// IMPORT BRAMKARZA I CONTEXTU
+
 import ProtectedRoute from "./components/ProtectedRoute"; 
 import { AuthProvider } from "./context/AuthContext";
 import "./App.css";
@@ -22,16 +22,16 @@ import "./App.css";
 function App() {
   return (
     <BrowserRouter>
-      {/* AuthProvider musi otaczać wszystko */}
+      
       <AuthProvider>
         <Navbar />
         <Routes>
-          {/* --- TRASY PUBLICZNE (Dostępne dla każdego) --- */}
+          
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* --- TRASY CHRONIONE (Tylko dla zalogowanych) --- */}
+          
           
           <Route path="/survey" element={
             <ProtectedRoute>
@@ -39,7 +39,7 @@ function App() {
             </ProtectedRoute>
           } />
 
-          {/* 2. NOWA TRASA: MOJE TRENINGI */}
+          
           <Route path="/my-workouts" element={
             <ProtectedRoute>
               <MyWorkouts />

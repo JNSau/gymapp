@@ -5,7 +5,7 @@ import "../index.css";
 const Home = () => {
   const { user } = useAuth();
 
-  // --- STYLE DLA PRZYCISKÓW (Hero + Survey) ---
+  
   const buttonStyle: React.CSSProperties = {
     display: "inline-block",
     background: "var(--accent)", 
@@ -21,13 +21,13 @@ const Home = () => {
     border: "none"
   };
 
-  // --- STYLE DLA KONTENERA ANKIETY (Nowy, lepszy wygląd) ---
+  
   const surveyContainerStyle: React.CSSProperties = {
-    // Delikatny gradient w kolorze akcentu (bardzo przezroczysty)
+    
     background: "linear-gradient(135deg, rgba(212, 255, 0, 0.08) 0%, #121212 100%)",
-    // Pełne obramowanie w kolorze akcentu
+    
     border: "1px solid var(--accent)",
-    // Świecąca poświata wokół całego pudełka
+    
     boxShadow: "0 0 30px rgba(212, 255, 0, 0.15)",
     
     padding: "50px", // Większy padding
@@ -56,7 +56,7 @@ const Home = () => {
   return (
     <div className="container" style={{ textAlign: "center", padding: "60px 20px" }}>
       
-      {/* --- HERO SECTION --- */}
+      
       <div style={{ marginBottom: "80px" }}>
         <h1 style={{ fontSize: "3.5rem", marginBottom: "20px", lineHeight: "1.1" }}>
           Welcome to <span style={{ color: "var(--accent)" }}>Gymersive</span>
@@ -96,11 +96,11 @@ const Home = () => {
         </div>
       </div>
 
-      {/* --- ANKIETA (Tylko dla zalogowanych - BARDZIEJ ZAAKCENTOWANA) --- */}
+      
       {user && (
         <div className="hover-effect" style={surveyContainerStyle}>
           
-          {/* Ozdobne tło (opcjonalnie) - wielki znak zapytania w tle */}
+          
           <div style={{
             position: "absolute",
             right: "-20px",
@@ -113,7 +113,7 @@ const Home = () => {
           }}>?</div>
 
           <div style={{ flex: 1, zIndex: 1 }}>
-            {/* Tytuł w kolorze akcentu */}
+            
             <h2 style={{ margin: "0 0 15px 0", fontSize: "2.2rem", color: "var(--accent)" }}>
               Not sure where to start? 🤔
             </h2>
@@ -128,7 +128,7 @@ const Home = () => {
                 to="/survey" 
                 style={{
                     ...buttonStyle,
-                    padding: "15px 35px", // Troszkę mniejszy padding niż w Hero, ale wciąż duży
+                    padding: "15px 35px", 
                     fontSize: "1.1rem"
                 }}
                 onMouseOver={handleMouseOver}
@@ -140,7 +140,7 @@ const Home = () => {
         </div>
       )}
 
-      {/* --- FEATURE CARDS --- */}
+      
       <div style={{ 
         display: "grid", 
         gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", 
@@ -168,7 +168,7 @@ const Home = () => {
   );
 };
 
-// Komponent Karty
+
 const FeatureCard = ({ icon, title, desc }: { icon: string, title: string, desc: string }) => (
   <div className="card" style={{ padding: "30px", textAlign: "left", height: "100%" }}>
     <div style={{ fontSize: "3rem", marginBottom: "15px" }}>{icon}</div>

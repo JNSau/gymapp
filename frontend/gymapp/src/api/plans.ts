@@ -25,7 +25,7 @@ export const deletePlan = async (id: number) => {
   return response.data;
 };
 
-// NOWE FUNKCJE:
+
 export const updatePlan = async (id: number, data: { name?: string; description?: string }) => {
   const response = await api.patch(`/plans/${id}/`, data);
   return response.data;

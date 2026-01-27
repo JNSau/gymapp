@@ -13,12 +13,12 @@ const ActiveWorkout = () => {
   const [dayData, setDayData] = useState<any>(null);
   const [logs, setLogs] = useState<any>({});
 
-  // --- STANY MODALA I BŁĘDÓW ---
+  
   const [showModal, setShowModal] = useState(false);
   const [workoutName, setWorkoutName] = useState("");
   const [saveError, setSaveError] = useState<string | null>(null);
 
-  // Stoper
+  
   useEffect(() => {
     let interval: any = null;
     if (isActive) {
@@ -31,7 +31,7 @@ const ActiveWorkout = () => {
     return () => clearInterval(interval);
   }, [isActive, seconds]);
 
-  // Pobieranie danych
+  
   useEffect(() => {
     if(planId) {
         getPlanDetails(Number(planId)).then(plan => {
@@ -42,17 +42,17 @@ const ActiveWorkout = () => {
     }
   }, [planId, dayId]);
 
-  // 1. BLOKADA KLAWISZY (Pisanie)
+ 
   const blockInvalidChar = (e: React.KeyboardEvent) => {
     if (['-', '+', 'e', 'E'].includes(e.key)) {
         e.preventDefault();
     }
   };
 
-  // 2. BLOKADA WKLEJANIA (Ctrl+V)
+  
   const blockPaste = (e: React.ClipboardEvent) => {
     const pasteData = e.clipboardData.getData('text');
-    // Jeśli wklejany tekst ma minus, blokujemy akcję
+    
     if (pasteData.includes('-') || pasteData.includes('+')) {
         e.preventDefault();
         alert("Wklejanie wartości ujemnych jest zabronione!");
@@ -62,7 +62,7 @@ const ActiveWorkout = () => {
   const handleInputChange = (planItemId: number, setIndex: number, field: string, value: any) => {
     let cleanValue = value;
     
-    // Autokorekta przy wpisywaniu (zamiana na 0 jeśli minus jakoś przeszedł)
+    
     if ((field === "weight" || field === "reps") && Number(value) < 0) {
         cleanValue = 0;
     }
@@ -97,19 +97,18 @@ const ActiveWorkout = () => {
     setSaveError(null);
   };
 
-  // --- GŁÓWNA FUNKCJA ZAPISU ---
+  
   const confirmSave = async () => {
     setSaveError(null);
 
-    // 3. WALIDACJA PRZED WYSŁANIEM (Ostateczna tarcza)
-    // Sprawdzamy czy gdziekolwiek w logach nie ma minusa
+    
     let hasNegativeValues = false;
     
-    // Przelatujemy przez wszystkie wpisane dane
+    
     Object.keys(logs).forEach(key => {
         Object.keys(logs[key]).forEach(setKey => {
             const set = logs[key][setKey];
-            // Sprawdzamy tylko jeśli seria jest oznaczona jako zrobiona (done)
+            
             if (set.done) {
                 if (Number(set.weight) < 0 || Number(set.reps) < 0) {
                     hasNegativeValues = true;
@@ -120,7 +119,7 @@ const ActiveWorkout = () => {
 
     if (hasNegativeValues) {
         setSaveError("BŁĄD: Wykryto wartości ujemne! \nPopraw ciężar lub powtórzenia na wartości dodatnie (0 lub więcej), aby zapisać trening.");
-        return; // <--- PRZERYWAMY FUNKCJĘ, NIE WYSYŁAMY DO SERWERA
+        return; 
     }
 
     try {
@@ -198,7 +197,7 @@ const ActiveWorkout = () => {
   return (
     <div className="container" style={{ paddingBottom: "80px" }}>
       
-      {/* --- HEADER --- */}
+      
       <div style={{ 
         position: "sticky", top: "70px", zIndex: 10, 
         background: "#1a1a1a", padding: "15px", 
@@ -227,7 +226,7 @@ const ActiveWorkout = () => {
         </div>
       </div>
 
-      {/* --- LISTA ĆWICZEŃ --- */}
+      
       <div style={{ marginTop: "20px" }}>
         {dayData.exercises.map((ex: any) => (
             <div key={ex.id} className="card" style={{ marginBottom: "20px", padding: "20px" }}>
@@ -238,26 +237,26 @@ const ActiveWorkout = () => {
                     <div key={index} style={{ display: "flex", gap: "10px", marginTop: "10px", alignItems: "center" }}>
                         <span style={{ width: "20px", fontWeight: "bold", color: "#555" }}>{index + 1}</span>
                         
-                        {/* INPUT WAGI */}
+                        
                         <input 
                             type="number" 
                             min="0"
                             placeholder="kg" 
                             style={{ width: "80px", padding: "8px" }}
-                            onKeyDown={blockInvalidChar} // Blokuje klawiaturę
-                            onPaste={blockPaste} // Blokuje wklejanie minusów
+                            onKeyDown={blockInvalidChar} 
+                            onPaste={blockPaste} 
                             onChange={(e) => handleInputChange(ex.id, index, "weight", e.target.value)}
                         />
                         
-                        {/* INPUT POWTÓRZEŃ */}
+                        
                         <input 
                             type="number" 
                             min="0"
                             placeholder="reps" 
                             defaultValue={ex.reps.split("-")[0]}
                             style={{ width: "80px", padding: "8px" }}
-                            onKeyDown={blockInvalidChar} // Blokuje klawiaturę
-                            onPaste={blockPaste} // Blokuje wklejanie minusów
+                            onKeyDown={blockInvalidChar} 
+                            onPaste={blockPaste} 
                             onChange={(e) => handleInputChange(ex.id, index, "reps", e.target.value)}
                         />
                         
@@ -272,7 +271,7 @@ const ActiveWorkout = () => {
         ))}
       </div>
 
-      {/* --- BUTTON FOOTER --- */}
+      
       <div style={{ 
         position: "fixed", bottom: 0, left: 0, right: 0, 
         background: "#121212", padding: "20px", borderTop: "1px solid #333",
@@ -287,7 +286,7 @@ const ActiveWorkout = () => {
         </button>
       </div>
 
-      {/* --- MODAL ZAPISU --- */}
+      
       {showModal && (
         <div style={{
             position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
@@ -311,7 +310,7 @@ const ActiveWorkout = () => {
                     />
                 </div>
 
-                {/* --- ERROR MESSAGE --- */}
+                
                 {saveError && (
                     <div style={{
                         background: "rgba(255, 0, 0, 0.1)",

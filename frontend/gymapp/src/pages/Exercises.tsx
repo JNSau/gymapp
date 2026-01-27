@@ -39,36 +39,36 @@ const Exercises = () => {
             className="exercise-card"
           >
             <div>
-              {/* --- 1. ZDJĘCIE ĆWICZENIA --- */}
+              
               {ex.image ? (
                 <img 
                   src={ex.image} 
                   alt={ex.name} 
                   className="exercise-img"
                   onError={(e) => {
-                     // Jeśli zdjęcie nie działa, ukrywamy img i pokazujemy div pod spodem
+                     
                      e.currentTarget.style.display = 'none'; 
                      e.currentTarget.nextElementSibling?.setAttribute('style', 'display: flex !important');
                   }}
                 />
               ) : null}
 
-              {/* Placeholder (pokazuje się gdy brak zdjęcia lub błąd ładowania) */}
+              
               {(!ex.image) && (
                   <div className="exercise-img" style={{ 
                       display: "flex", 
                       alignItems: "center", 
                       justifyContent: "center", 
                       background: "#222", 
-                      color: "#555",      // Kolor emotki (jeśli system nie narzuci swojego)
-                      fontSize: "4rem",   // Duży rozmiar
-                      opacity: "0.5"      // Lekka przezroczystość, żeby była tłem
+                      color: "#555",      
+                      fontSize: "4rem",   
+                      opacity: "0.5"      
                   }}>
                       🏋️
                   </div>
               )}
 
-              {/* --- 2. BADGE I TREŚĆ --- */}
+              
               <span className="muscle-badge">
                  {ex.muscle_group || "General"}
               </span>

@@ -30,10 +30,10 @@ const Profile = () => {
     <div className="container">
       <div style={{ maxWidth: "800px", margin: "40px auto" }}>
         
-        {/* --- GŁÓWNA KARTA PROFILOWA --- */}
+        
         <div className="card" style={{ padding: "40px", textAlign: "center", marginBottom: "30px" }}>
           
-          {/* Avatar */}
+          
           <div style={{ 
             width: "120px", height: "120px", 
             background: "linear-gradient(135deg, var(--accent), #aebb00)", 
@@ -56,7 +56,7 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* --- STATYSTYKI --- */}
+        
         <h2 style={{ marginBottom: "20px" }}>Your Statistics</h2>
         <div style={{ 
           display: "grid", 
@@ -65,7 +65,7 @@ const Profile = () => {
           marginBottom: "40px"
         }}>
           
-          {/* Stat 1: Data dołączenia */}
+          
           <div className="card" style={{ padding: "20px", textAlign: "center" }}>
             <span style={{ fontSize: "2rem" }}>📅</span>
             <h3 style={{ margin: "10px 0 5px" }}>Member Since</h3>
@@ -74,7 +74,7 @@ const Profile = () => {
             </p>
           </div>
 
-          {/* Stat 2: Ukończone treningi */}
+          
           <div className="card" style={{ padding: "20px", textAlign: "center" }}>
             <span style={{ fontSize: "2rem" }}>🔥</span>
             <h3 style={{ margin: "10px 0 5px" }}>Workouts Done</h3>
@@ -83,7 +83,7 @@ const Profile = () => {
             </p>
           </div>
 
-          {/* Stat 3: Cel */}
+          
           <div className="card" style={{ padding: "20px", textAlign: "center" }}>
             <span style={{ fontSize: "2rem" }}>🎯</span>
             <h3 style={{ margin: "10px 0 5px" }}>Current Goal</h3>
@@ -93,7 +93,7 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* --- HISTORIA TRENINGÓW --- */}
+        
         <h2 style={{ marginBottom: "20px", borderTop: "1px solid #333", paddingTop: "40px" }}>Recent Activity</h2>
         
         {history.length === 0 ? (
@@ -106,7 +106,7 @@ const Profile = () => {
                 {history.map((session: any) => (
                     <div key={session.id} className="card" style={{ padding: "20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <div>
-                            {/* --- ZMIANA TUTAJ: Wyświetlamy custom_name --- */}
+                            
                             <h4 style={{ margin: "0 0 5px 0", fontSize: "1.1rem", color: "var(--accent)" }}>
                                 {session.custom_name || session.plan_name || "Workout"}
                             </h4>

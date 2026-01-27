@@ -23,10 +23,9 @@ export const getCurrentUser = async () => {
   return response.data;
 };
 
-// --- NOWA FUNKCJA DO ANKIETY ---
-// Służy do aktualizacji samego poziomu użytkownika
+
 export const updateUserLevel = async (level: string) => {
-  // Używamy PATCH, żeby zaktualizować tylko jedno pole, a nie cały obiekt
+  
   const response = await api.patch("/users/me/", { level });
   return response.data;
 };

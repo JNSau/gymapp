@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-// --- POPRAWKA: Dodajemy 'import type' ---
+
 import type { ReactNode } from "react";
 import { loginUser, registerUser, getCurrentUser } from "../api/users";
 
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Funkcja logowania
+  
   const login = async (username: string, password: string) => {
     try {
       const data = await loginUser({ username, password });
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Funkcja rejestracji
+  
   const register = async (username: string, password: string, email: string) => {
     try {
       await registerUser({ username, password, email });
@@ -51,14 +51,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Funkcja wylogowania
+  
   const logout = () => {
     setUser(null);
     setToken(null);
     localStorage.removeItem("token");
   };
 
-  // Funkcja pobrania danych aktualnego użytkownika
+  
   const fetchUser = async () => {
     const currentToken = localStorage.getItem("token");
     if (!currentToken) return;
@@ -72,7 +72,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Automatyczne sprawdzanie sesji
+  
   useEffect(() => {
     const initAuth = async () => {
       const storedToken = localStorage.getItem("token");

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { registerUser } from "../api/users";
-import { Link } from "react-router-dom"; // Usunąłem useNavigate, bo teraz user klika sam przycisk
+import { Link } from "react-router-dom"; 
 import "../index.css";
 
 const Register = () => {
@@ -10,7 +10,7 @@ const Register = () => {
   const [level, setLevel] = useState("BEGINNER");
   
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false); // <--- NOWY STAN
+  const [success, setSuccess] = useState(false); 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,17 +18,17 @@ const Register = () => {
 
     try {
       await registerUser({ username, email, password, level });
-      // Zamiast alertu i przekierowania, zmieniamy stan widoku
+      
       setSuccess(true);
     } catch (err: any) {
       console.error(err);
       if (err.response && err.response.data) {
-        // Czasami Django zwraca błędy jako tablicę, czasami jako obiekt
+        
         const data = err.response.data;
         let messages = "Registration failed.";
         
         if (typeof data === 'object') {
-             // Łączymy wszystkie komunikaty błędów w jeden ciąg
+             
              messages = Object.values(data).flat().join(", ");
         }
         
@@ -39,7 +39,7 @@ const Register = () => {
     }
   };
 
-  // --- WIDOK SUKCESU (Zamiast Alertu) ---
+  
   if (success) {
     return (
       <div className="container">
@@ -59,7 +59,7 @@ const Register = () => {
     );
   }
 
-  // --- WIDOK FORMULARZA (Standardowy) ---
+  
   return (
     <div className="container">
       <div className="auth-container">
@@ -118,7 +118,7 @@ const Register = () => {
           </button>
         </form>
 
-        {/* --- KOMUNIKAT BŁĘDU (Jeśli coś pójdzie nie tak) --- */}
+        
         {error && (
           <div style={{ marginTop: "15px", padding: "10px", background: "rgba(255, 68, 68, 0.1)", border: "1px solid var(--danger)", color: "var(--danger)", borderRadius: "8px", fontSize: "0.9rem", textAlign: "center" }}>
             ⚠️ {error}

@@ -9,16 +9,16 @@ interface FeedbackProps {
 const Feedback = ({ planId }: FeedbackProps) => {
   const [rating, setRating] = useState<number>(2);
   
-  // --- NOWY STAN: Przechowuje wiadomość do wyświetlenia ---
+  
   const [message, setMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
   const handleSend = async () => {
-    setMessage(null); // Czyścimy poprzednie komunikaty
+    setMessage(null); 
 
     try {
       await sendFeedback({ plan: planId, rating });
       
-      // SUKCES: Ustawiamy zielony komunikat
+      
       setMessage({ text: "Thanks for your feedback! ⭐", type: "success" });
       
     } catch (error: any) {
@@ -26,16 +26,16 @@ const Feedback = ({ planId }: FeedbackProps) => {
       
       let errorText = "Failed to send feedback.";
       
-      // Sprawdzamy treść błędu z backendu
+      
       if (error.response && error.response.status === 400 && error.response.data.error) {
-          errorText = error.response.data.error; // np. "You have already rated this plan."
+          errorText = error.response.data.error; 
       }
 
-      // BŁĄD: Ustawiamy czerwony komunikat
+      
       setMessage({ text: errorText, type: "error" });
     }
 
-    // Opcjonalnie: Ukryj komunikat po 3 sekundach
+    
     setTimeout(() => {
         setMessage(null);
     }, 4000);
@@ -64,14 +64,14 @@ const Feedback = ({ planId }: FeedbackProps) => {
         </button>
       </div>
 
-      {/* --- WYŚWIETLANIE KOMUNIKATU --- */}
+      
       {message && (
         <div style={{ 
             marginTop: "15px", 
             padding: "10px", 
             borderRadius: "8px",
             textAlign: "center",
-            // Dynamiczne style w zależności od typu wiadomości
+            
             background: message.type === 'success' ? "rgba(0, 255, 0, 0.1)" : "rgba(255, 0, 0, 0.1)",
             border: message.type === 'success' ? "1px solid var(--success)" : "1px solid var(--danger)",
             color: message.type === 'success' ? "var(--success)" : "var(--danger)"
